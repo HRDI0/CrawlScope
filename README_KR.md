@@ -127,23 +127,35 @@ playwright install chromium
 
 ## 빠른 시작
 
-### 명령줄 (CLI)
+### 웹 UI (권장)
 
-```bash
-# 기본 크롤
-python main.py https://example.com
-
-# 옵션 지정
-python main.py https://example.com --max-pages 500 --depth 5 --js-rendering
-```
-
-### 웹 UI
+Python SEO Spider를 가장 쉽게 사용하는 방법입니다. 모든 크롤 옵션을 직관적인 그래픽 인터페이스로 조작할 수 있어 CLI 옵션을 외울 필요가 없습니다.
 
 ```bash
 # 웹 서버 실행
 python web_server.py
 
-# 브라우저에서 http://localhost:8000 접속
+# 브라우저에서 http://localhost:8090 접속
+```
+
+Carbon Design System 다크 테마 대시보드에서 토글과 입력 필드로 모든 크롤 설정을 구성하고, 실시간 진행 상황을 모니터링하며, 차트와 테이블로 결과를 확인하고, 여러 크롤 세션을 관리할 수 있습니다.
+
+### 명령줄 (CLI)
+
+자동화, 스크립팅, CI/CD 파이프라인에 적합합니다. 전체 옵션 목록은 **[CLI 옵션 레퍼런스](CLI_OPTIONS.md)**를 참조하세요.
+
+```bash
+# 기본 크롤
+python main.py crawl https://example.com
+
+# JS 렌더링, 서브도메인 탐색, 전체 내보내기 포함 전체 감사
+python main.py crawl https://example.com --js-render --subdomains --evasion --format all --report
+
+# URL 목록 크롤
+python main.py list urls.txt --format xlsx
+
+# 사이트맵 크롤
+python main.py sitemap https://example.com/sitemap.xml
 ```
 
 ### Python API
@@ -267,6 +279,7 @@ python-seo-spider/
 
 ## 문서
 
+- **[CLI_OPTIONS.md](CLI_OPTIONS.md)** — CLI 전체 옵션 레퍼런스 및 사용 예시 (영어/한국어)
 - **[산출물_컬럼_명세서.xlsx](산출물_컬럼_명세서.xlsx)** — 27개 CSV 파일, 26개 XLSX 시트, JSON 필드의 전체 컬럼 명세 (한/영)
 - **[SEO_GEO_분석_가이드.md](SEO_GEO_분석_가이드.md)** — 크롤 데이터를 활용한 SEO/GEO 제안서 작성 가이드 (시각화 전략, Python 분석 코드 예시 포함)
 

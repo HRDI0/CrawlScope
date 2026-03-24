@@ -127,23 +127,35 @@ playwright install chromium
 
 ## Quick Start
 
-### Command Line
+### Web UI (Recommended)
 
-```bash
-# Basic crawl
-python main.py https://example.com
-
-# With options
-python main.py https://example.com --max-pages 500 --depth 5 --js-rendering
-```
-
-### Web UI
+The easiest way to use Python SEO Spider. All crawl options are available through an intuitive graphical interface — no need to memorize CLI flags.
 
 ```bash
 # Start the web server
 python web_server.py
 
-# Open http://localhost:8000 in your browser
+# Open http://localhost:8090 in your browser
+```
+
+The Web UI provides a Carbon Design System dark-theme dashboard where you can configure all crawl settings via toggles and input fields, monitor progress in real-time, view results with charts and tables, and manage multiple crawl sessions.
+
+### Command Line (CLI)
+
+For automation, scripting, or CI/CD pipelines. See **[CLI Options Reference](CLI_OPTIONS.md)** for the full list of options.
+
+```bash
+# Basic crawl
+python main.py crawl https://example.com
+
+# Full audit with JS rendering, subdomain discovery, and all exports
+python main.py crawl https://example.com --js-render --subdomains --evasion --format all --report
+
+# Crawl from URL list
+python main.py list urls.txt --format xlsx
+
+# Crawl from sitemap
+python main.py sitemap https://example.com/sitemap.xml
 ```
 
 ### Python API
@@ -267,6 +279,7 @@ python-seo-spider/
 
 ## Documentation
 
+- **[CLI_OPTIONS.md](CLI_OPTIONS.md)** — Full CLI options reference with examples (English/Korean)
 - **[산출물_컬럼_명세서.xlsx](산출물_컬럼_명세서.xlsx)** — Complete column specification for all 27 CSV files, 26 XLSX sheets, and JSON fields (Korean/English)
 - **[SEO_GEO_분석_가이드.md](SEO_GEO_분석_가이드.md)** — Guide for using crawl data in SEO/GEO proposals with visualization strategies and Python analysis code examples
 
