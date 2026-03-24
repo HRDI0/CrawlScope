@@ -288,7 +288,3 @@ python-seo-spider/
 - Python 3.10+
 - Playwright (for JavaScript rendering)
 - See `requirements.txt` for full dependency list
-
-## License
-
-MIT
