@@ -1,0 +1,123 @@
+# Python SEO Spider - Configuration File
+# Copy this to config.yaml and customize as needed
+
+# === Target ===
+start_urls:
+  - "https://example.com"
+
+# === Crawl Mode ===
+# spider: Follow links from start URL (BFS)
+# list: Crawl from a file of URLs
+# sitemap: Crawl URLs from a sitemap
+crawl_mode: "spider"
+
+# === General ===
+max_urls: 50000
+max_depth: 0              # 0 = unlimited
+max_concurrent: 10
+request_timeout: 30       # seconds
+delay_between_requests: 0
+respect_robots_txt: true
+respect_nofollow: true
+respect_canonical: true
+follow_redirects: true
+max_redirects: 5
+
+# === Subdomain Crawling ===
+crawl_subdomains: true
+discover_subdomains: true
+subdomain_discovery_methods:
+  - dns
+  - crt_sh
+  - links
+  - sitemap
+
+# === JavaScript Rendering ===
+# rendering_mode: "raw_html" or "javascript"
+rendering_mode: "raw_html"
+js_wait_time: 5.0
+js_browser_instances: 3
+block_resources: []       # image, font, media, stylesheet
+ajax_timeout: 10.0
+viewport_width: 1920
+viewport_height: 1080
+
+# === Bot Evasion ===
+evasion_enabled: true
+rotate_user_agents: true
+randomize_delays: true
+delay_min: 0.5
+delay_max: 3.0
+use_stealth_mode: true
+rotate_proxies: false
+proxy_list: []
+spoof_referer: true
+randomize_headers: true
+mimic_browser_fingerprint: true
+honor_retry_after: true
+max_retries: 3
+
+# === Scope ===
+include_patterns: []
+exclude_patterns:
+  - "/wp-admin/"
+  - "/cart/"
+  - "/checkout/"
+  - "\\?.*session"
+crawl_external: false
+check_external_links: true
+allowed_protocols:
+  - http
+  - https
+
+# === Content Extraction ===
+extract_headings: true
+extract_meta: true
+extract_images: true
+extract_links: true
+extract_structured_data: true
+extract_hreflang: true
+extract_canonicals: true
+extract_pagination: true
+calculate_word_count: true
+calculate_text_ratio: true
+detect_duplicates: true
+
+# === Custom Extraction ===
+# Extract specific data from pages using CSS, XPath, or Regex
+custom_extractions:
+  # - name: "price"
+  #   type: "css"
+  #   value: ".product-price"
+  # - name: "author"
+  #   type: "xpath"
+  #   value: "//meta[@name='author']/@content"
+  # - name: "phone"
+  #   type: "regex"
+  #   value: "\\d{3}[-.\\s]\\d{3}[-.\\s]\\d{4}"
+
+# === Custom Search ===
+# Search for specific content on pages
+custom_searches:
+  # - name: "has_phone"
+  #   type: "regex"
+  #   value: "\\d{3}[-.\\s]\\d{3}[-.\\s]\\d{4}"
+  # - name: "has_analytics"
+  #   type: "contains"
+  #   value: "google-analytics.com"
+
+# === Security ===
+check_ssl: true
+check_mixed_content: true
+check_http_security_headers: true
+
+# === Sitemap Generation ===
+generate_sitemap: true
+sitemap_include_images: false
+sitemap_include_lastmod: true
+sitemap_include_priority: false
+sitemap_include_changefreq: false
+
+# === Output ===
+output_dir: "./crawl_output"
+export_format: "csv"      # csv, xlsx, json

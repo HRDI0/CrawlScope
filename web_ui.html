@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python SEO Spider</title>
+<style>
+/* === Carbon Design System Tokens === */
+:root {
+  /* Gray 100 theme (dark) */
+  --cds-background: #161616;
+  --cds-background-hover: #353535;
+  --cds-background-active: #525252;
+  --cds-layer-01: #262626;
+  --cds-layer-02: #393939;
+  --cds-layer-hover: #353535;
+  --cds-field-01: #262626;
+  --cds-field-02: #393939;
+  --cds-border-subtle: #393939;
+  --cds-border-strong: #6f6f6f;
+  --cds-text-primary: #f4f4f4;
+  --cds-text-secondary: #c6c6c6;
+  --cds-text-placeholder: #6f6f6f;
+  --cds-text-on-color: #ffffff;
+  --cds-text-helper: #a8a8a8;
+  --cds-text-inverse: #161616;
+  --cds-link-primary: #78a9ff;
+  --cds-interactive: #4589ff;
+  --cds-focus: #ffffff;
+  --cds-support-error: #ff8389;
+  --cds-support-success: #42be65;
+  --cds-support-warning: #f1c21b;
+  --cds-support-info: #4589ff;
+  --cds-button-primary: #0f62fe;
+  --cds-button-primary-hover: #0353e9;
+  --cds-button-secondary: #6f6f6f;
+  --cds-button-danger: #da1e28;
+  --cds-tag-blue: #0043ce;
+  --cds-tag-green: #0e6027;
+  --cds-tag-red: #a2191f;
+  --cds-tag-yellow: #8e6a00;
+  --cds-overlay: rgba(0,0,0,0.65);
+  --cds-spacing-03: 0.5rem;
+  --cds-spacing-04: 0.75rem;
+  --cds-spacing-05: 1rem;
+  --cds-spacing-06: 1.5rem;
+  --cds-spacing-07: 2rem;
+  --cds-spacing-09: 3rem;
+}
+
+/* === IBM Plex Sans (Carbon default) === */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--cds-background);
+  color: var(--cds-text-primary);
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+/* === Carbon Header === */
+.cds-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 48px;
+  background: #161616;
+  border-bottom: 1px solid var(--cds-border-subtle);
+  display: flex; align-items: center;
+  padding: 0 1rem;
+}
+.cds-header__name {
+  font-size: 14px; font-weight: 600;
+  color: var(--cds-text-primary);
+  display: flex; align-items: center; gap: 8px;
+}
+.cds-header__name svg { width: 20px; height: 20px; fill: var(--cds-interactive); }
+.cds-header__nav {
+  margin-left: auto; display: flex; gap: 4px;
+}
+.cds-header__nav-item {
+  padding: 0 16px; height: 48px; display: flex; align-items: center;
+  color: var(--cds-text-secondary); cursor: pointer; font-size: 14px;
+  border: none; background: none; transition: all 0.15s;
+}
+.cds-header__nav-item:hover { background: var(--cds-background-hover); color: var(--cds-text-primary); }
+.cds-header__nav-item.active { color: var(--cds-text-primary); border-bottom: 2px solid var(--cds-interactive); }
+
+/* === Layout === */
+.cds-content { margin-top: 48px; padding: var(--cds-spacing-07); max-width: 1400px; margin-left: auto; margin-right: auto; }
+
+/* === Carbon Grid === */
+.cds-grid { display: grid; gap: var(--cds-spacing-05); }
+.cds-grid--2col { grid-template-columns: 1fr 1fr; }
+.cds-grid--3col { grid-template-columns: 1fr 1fr 1fr; }
+.cds-grid--4col { grid-template-columns: 1fr 1fr 1fr 1fr; }
+@media (max-width: 768px) {
+  .cds-grid--2col, .cds-grid--3col, .cds-grid--4col { grid-template-columns: 1fr; }
+}
+
+/* === Carbon Tile === */
+.cds-tile {
+  background: var(--cds-layer-01);
+  padding: var(--cds-spacing-05);
+  min-height: 0;
+}
+.cds-tile--clickable { cursor: pointer; transition: background 0.15s; }
+.cds-tile--clickable:hover { background: var(--cds-layer-hover); }
+.cds-tile__heading {
+  font-size: 14px; font-weight: 600; color: var(--cds-text-secondary);
+  text-transform: uppercase; letter-spacing: 0.32px;
+  margin-bottom: var(--cds-spacing-04);
+}
+
+/* === Carbon Form === */
+.cds-form-group { margin-bottom: var(--cds-spacing-05); }
+.cds-label {
+  display: block; font-size: 12px; font-weight: 400;
+  color: var(--cds-text-secondary); margin-bottom: 8px;
+  letter-spacing: 0.32px;
+}
+.cds-text-input {
+  width: 100%; height: 40px; padding: 0 16px;
+  background: var(--cds-field-01); border: none;
+  border-bottom: 1px solid var(--cds-border-strong);
+  color: var(--cds-text-primary); font-size: 14px;
+  font-family: inherit; outline: none; transition: all 0.15s;
+}
+.cds-text-input:focus { border-bottom: 2px solid var(--cds-interactive); }
+.cds-text-input::placeholder { color: var(--cds-text-placeholder); }
+
+.cds-text-input--lg { height: 48px; font-size: 16px; }
+
+.cds-number-input {
+  width: 100%; height: 40px; padding: 0 16px;
+  background: var(--cds-field-01); border: none;
+  border-bottom: 1px solid var(--cds-border-strong);
+  color: var(--cds-text-primary); font-size: 14px;
+  font-family: inherit; outline: none;
+}
+.cds-number-input:focus { border-bottom: 2px solid var(--cds-interactive); }
+
+.cds-select {
+  width: 100%; height: 40px; padding: 0 16px;
+  background: var(--cds-field-01); border: none;
+  border-bottom: 1px solid var(--cds-border-strong);
+  color: var(--cds-text-primary); font-size: 14px;
+  font-family: inherit; outline: none; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23c6c6c6'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+}
+
+.cds-helper-text { font-size: 12px; color: var(--cds-text-helper); margin-top: 4px; }
+
+/* === Carbon Toggle === */
+.cds-toggle { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
+.cds-toggle input { display: none; }
+.cds-toggle__switch {
+  width: 48px; height: 24px; border-radius: 12px;
+  background: var(--cds-border-strong); position: relative;
+  transition: background 0.15s; flex-shrink: 0;
+}
+.cds-toggle__switch::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--cds-text-primary); transition: transform 0.15s;
+}
+.cds-toggle input:checked + .cds-toggle__switch { background: var(--cds-button-primary); }
+.cds-toggle input:checked + .cds-toggle__switch::after { transform: translateX(24px); }
+.cds-toggle__label { font-size: 14px; color: var(--cds-text-primary); }
+.cds-toggle__helper { font-size: 12px; color: var(--cds-text-helper); }
+
+/* === Carbon Button === */
+.cds-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; height: 48px; padding: 0 64px 0 16px;
+  font-family: inherit; font-size: 14px; font-weight: 400;
+  border: none; cursor: pointer; transition: all 0.15s;
+  position: relative; min-width: 0;
+}
+.cds-btn svg { position: absolute; right: 16px; width: 16px; height: 16px; fill: currentColor; }
+.cds-btn--primary { background: var(--cds-button-primary); color: var(--cds-text-on-color); }
+.cds-btn--primary:hover { background: var(--cds-button-primary-hover); }
+.cds-btn--secondary { background: var(--cds-button-secondary); color: var(--cds-text-on-color); }
+.cds-btn--secondary:hover { background: #5a5a5a; }
+.cds-btn--danger { background: var(--cds-button-danger); color: var(--cds-text-on-color); }
+.cds-btn--danger:hover { background: #b81921; }
+.cds-btn--ghost { background: transparent; color: var(--cds-link-primary); padding: 0 16px; }
+.cds-btn--ghost:hover { background: var(--cds-background-hover); }
+.cds-btn--sm { height: 32px; padding: 0 48px 0 12px; font-size: 14px; }
+.cds-btn--lg { height: 48px; }
+.cds-btn--full { width: 100%; }
+.cds-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* === Carbon Tag === */
+.cds-tag {
+  display: inline-flex; align-items: center; height: 24px;
+  padding: 0 8px; border-radius: 24px; font-size: 12px;
+  font-weight: 400;
+}
+.cds-tag--blue { background: var(--cds-tag-blue); color: #a6c8ff; }
+.cds-tag--green { background: var(--cds-tag-green); color: #6fdc8c; }
+.cds-tag--red { background: var(--cds-tag-red); color: #ffb3b8; }
+.cds-tag--yellow { background: var(--cds-tag-yellow); color: #f1c21b; }
+.cds-tag--gray { background: #525252; color: #c6c6c6; }
+
+/* === Carbon Accordion === */
+.cds-accordion {}
+.cds-accordion__item { border-top: 1px solid var(--cds-border-subtle); }
+.cds-accordion__heading {
+  width: 100%; display: flex; align-items: center; gap: 12px;
+  padding: 12px 0; background: none; border: none;
+  color: var(--cds-text-primary); font-size: 14px; font-weight: 400;
+  font-family: inherit; cursor: pointer; text-align: left;
+}
+.cds-accordion__arrow {
+  width: 16px; height: 16px; fill: var(--cds-text-primary);
+  transition: transform 0.15s; flex-shrink: 0;
+}
+.cds-accordion__item.open .cds-accordion__arrow { transform: rotate(90deg); }
+.cds-accordion__content {
+  max-height: 0; overflow: hidden; transition: max-height 0.25s ease;
+  padding-left: 28px;
+}
+.cds-accordion__item.open .cds-accordion__content { max-height: 800px; padding-bottom: 16px; }
+
+/* === Carbon Tabs === */
+.cds-tabs { display: flex; border-bottom: 1px solid var(--cds-border-subtle); margin-bottom: var(--cds-spacing-05); }
+.cds-tab {
+  padding: 12px 16px; background: none; border: none;
+  color: var(--cds-text-secondary); font-size: 14px; font-family: inherit;
+  cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s;
+}
+.cds-tab:hover { color: var(--cds-text-primary); }
+.cds-tab.active { color: var(--cds-text-primary); border-bottom-color: var(--cds-interactive); }
+.cds-tab-panel { display: none; }
+.cds-tab-panel.active { display: block; }
+
+/* === Carbon Progress Bar === */
+.cds-progress { margin: var(--cds-spacing-05) 0; }
+.cds-progress__bar {
+  width: 100%; height: 8px; background: var(--cds-field-01);
+  border-radius: 0; overflow: hidden;
+}
+.cds-progress__fill {
+  height: 100%; background: var(--cds-interactive);
+  transition: width 0.3s ease; width: 0%;
+}
+.cds-progress__label {
+  display: flex; justify-content: space-between;
+  font-size: 12px; color: var(--cds-text-secondary); margin-top: 4px;
+}
+
+/* === Carbon Data Table === */
+.cds-table-wrap { overflow-x: auto; }
+.cds-table {
+  width: 100%; border-collapse: collapse; font-size: 14px;
+}
+.cds-table thead { background: var(--cds-layer-02); }
+.cds-table th {
+  padding: 12px 16px; text-align: left; font-weight: 600;
+  color: var(--cds-text-primary); font-size: 14px;
+  border-bottom: 1px solid var(--cds-border-subtle);
+  white-space: nowrap; cursor: pointer; user-select: none;
+}
+.cds-table th:hover { background: var(--cds-background-hover); }
+.cds-table td {
+  padding: 12px 16px; border-bottom: 1px solid var(--cds-border-subtle);
+  color: var(--cds-text-secondary); max-width: 300px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cds-table tbody tr:hover { background: var(--cds-layer-hover); }
+
+/* === Status indicator === */
+.status-dot {
+  display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+  margin-right: 6px;
+}
+.status-dot--success { background: var(--cds-support-success); }
+.status-dot--error { background: var(--cds-support-error); }
+.status-dot--warning { background: var(--cds-support-warning); }
+.status-dot--info { background: var(--cds-support-info); }
+
+/* === Carbon Notification === */
+.cds-notification {
+  display: flex; padding: 14px 16px; gap: 12px;
+  border-left: 3px solid; margin-bottom: var(--cds-spacing-05);
+}
+.cds-notification--info { background: #002d9c20; border-color: var(--cds-support-info); }
+.cds-notification--success { background: #19803120; border-color: var(--cds-support-success); }
+.cds-notification--error { background: #75050520; border-color: var(--cds-support-error); }
+.cds-notification--warning { background: #8e6a0020; border-color: var(--cds-support-warning); }
+.cds-notification__title { font-weight: 600; font-size: 14px; }
+.cds-notification__body { font-size: 14px; color: var(--cds-text-secondary); margin-top: 2px; }
+
+/* === Stats Card === */
+.stat-card { text-align: left; }
+.stat-card__value {
+  font-size: 36px; font-weight: 300; color: var(--cds-text-primary);
+  font-family: 'IBM Plex Sans', sans-serif; line-height: 1.2;
+}
+.stat-card__label {
+  font-size: 14px; color: var(--cds-text-secondary); margin-top: 4px;
+}
+
+/* === Loading/Inline === */
+.cds-loading {
+  display: inline-block; width: 16px; height: 16px;
+  border: 2px solid var(--cds-text-on-color); border-top-color: transparent;
+  border-radius: 50%; animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* === Log area === */
+.cds-log {
+  background: var(--cds-field-01); padding: 16px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+  color: var(--cds-text-secondary); max-height: 300px;
+  overflow-y: auto; white-space: pre-wrap;
+}
+
+/* === Scrollbar === */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cds-background); }
+::-webkit-scrollbar-thumb { background: var(--cds-border-strong); border-radius: 3px; }
+
+/* === Page sections === */
+.section { display: none; }
+.section.active { display: block; }
+
+/* === Misc === */
+.mb-3 { margin-bottom: 12px; }
+.mb-4 { margin-bottom: 16px; }
+.mb-5 { margin-bottom: 20px; }
+.mb-6 { margin-bottom: 24px; }
+.mt-4 { margin-top: 16px; }
+.mt-6 { margin-top: 24px; }
+.gap-3 { gap: 12px; }
+.flex { display: flex; }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.w-full { width: 100%; }
+.text-mono { font-family: 'IBM Plex Mono', monospace; }
+.text-sm { font-size: 12px; }
+.text-secondary { color: var(--cds-text-secondary); }
+.hidden { display: none !important; }
+
+.url-input-row {
+  display: flex; gap: 0; align-items: stretch;
+}
+.url-input-row .cds-text-input { flex: 1; }
+.url-input-row .cds-btn { flex-shrink: 0; padding: 0 24px; height: 48px; }
+
+/* Chart containers */
+.chart-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.chart-bar__label { width: 60px; font-size: 13px; text-align: right; color: var(--cds-text-secondary); flex-shrink: 0; }
+.chart-bar__fill { height: 20px; border-radius: 0; transition: width 0.3s; min-width: 2px; }
+.chart-bar__value { font-size: 13px; color: var(--cds-text-secondary); min-width: 32px; }
+
+/* Issue chips */
+.issue-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--cds-border-subtle); }
+.issue-row:last-child { border-bottom: none; }
+.issue-row__name { font-size: 14px; color: var(--cds-text-primary); }
+.issue-row__count { font-size: 14px; font-weight: 600; color: var(--cds-support-error); }
+
+.search-input-wrapper { position: relative; margin-bottom: var(--cds-spacing-05); }
+.search-input-wrapper .cds-text-input { padding-left: 40px; }
+.search-input-wrapper svg {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  width: 16px; height: 16px; fill: var(--cds-text-placeholder);
+}
+</style>
+</head>
+<body>
+
+<!-- === Header === -->
+<header class="cds-header">
+  <div class="cds-header__name">
+    <svg viewBox="0 0 32 32"><path d="M16 2A14 14 0 1 0 30 16 14 14 0 0 0 16 2Zm0 26A12 12 0 1 1 28 16 12 12 0 0 1 16 28Z"/><path d="M16 10a2 2 0 1 0 2 2 2 2 0 0 0-2-2zm0 2z"/><path d="M16 17a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0v-4a1 1 0 0 0-1-1z"/></svg>
+    Python SEO Spider
+  </div>
+  <nav class="cds-header__nav">
+    <button class="cds-header__nav-item active" onclick="showSection('crawl')">Crawl</button>
+    <button class="cds-header__nav-item" onclick="showSection('results')">Results</button>
+    <button class="cds-header__nav-item" onclick="showSection('pages')">Pages</button>
+    <button class="cds-header__nav-item" onclick="showSection('sessions')">Sessions</button>
+  </nav>
+</header>
+
+<div class="cds-content">
+
+<!-- ==================== CRAWL SECTION ==================== -->
+<div id="section-crawl" class="section active">
+
+  <!-- URL Input -->
+  <div class="mb-6">
+    <label class="cds-label">Target URL</label>
+    <div class="url-input-row">
+      <input id="urlInput" type="text" class="cds-text-input cds-text-input--lg" placeholder="https://example.com" />
+      <button id="btnStart" class="cds-btn cds-btn--primary cds-btn--lg" onclick="startCrawl()">
+        Start Crawl
+        <svg viewBox="0 0 32 32"><path d="M16 2A14 14 0 1 0 30 16 14 14 0 0 0 16 2Zm6.2 14.6-8 5A.75.75 0 0 1 13 21V11a.75.75 0 0 1 1.2-.6l8 5a.75.75 0 0 1 0 1.2Z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Config Sections (Accordion) -->
+  <div class="cds-accordion">
+
+    <!-- Basic Settings -->
+    <div class="cds-accordion__item open">
+      <button class="cds-accordion__heading" onclick="toggleAccordion(this)">
+        <svg class="cds-accordion__arrow" viewBox="0 0 16 16"><path d="M6 3.5L10.5 8 6 12.5z"/></svg>
+        Basic Settings
+      </button>
+      <div class="cds-accordion__content">
+        <div class="cds-grid cds-grid--3col mb-4">
+          <div class="cds-form-group">
+            <label class="cds-label">Max URLs</label>
+            <input id="maxUrls" type="number" class="cds-number-input" value="5000" min="1" max="100000" />
+            <div class="cds-helper-text">Maximum pages to crawl</div>
+          </div>
+          <div class="cds-form-group">
+            <label class="cds-label">Max Depth</label>
+            <input id="maxDepth" type="number" class="cds-number-input" value="0" min="0" max="100" />
+            <div class="cds-helper-text">0 = unlimited</div>
+          </div>
+          <div class="cds-form-group">
+            <label class="cds-label">Concurrent Requests</label>
+            <input id="concurrent" type="number" class="cds-number-input" value="10" min="1" max="100" />
+          </div>
+        </div>
+        <div class="cds-grid cds-grid--3col">
+          <div class="cds-form-group">
+            <label class="cds-label">Timeout (seconds)</label>
+            <input id="timeout" type="number" class="cds-number-input" value="30" min="5" max="120" />
+          </div>
+          <div class="cds-form-group">
+            <label class="cds-label">Export Format</label>
+            <select id="exportFormat" class="cds-select">
+              <option value="csv">CSV</option>
+              <option value="xlsx">Excel (XLSX)</option>
+              <option value="json">JSON</option>
+              <option value="all">All Formats</option>
+            </select>
+          </div>
+          <div class="cds-form-group">
+            <label class="cds-label">&nbsp;</label>
+            <label class="cds-toggle">
+              <input type="checkbox" id="respectRobots" checked />
+              <span class="cds-toggle__switch"></span>
+              <span class="cds-toggle__label">Respect robots.txt</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subdomain Discovery -->
+    <div class="cds-accordion__item">
+      <button class="cds-accordion__heading" onclick="toggleAccordion(this)">
+        <svg class="cds-accordion__arrow" viewBox="0 0 16 16"><path d="M6 3.5L10.5 8 6 12.5z"/></svg>
+        Subdomain Discovery
+      </button>
+      <div class="cds-accordion__content">
+        <div class="mb-4">
+          <label class="cds-toggle">
+            <input type="checkbox" id="subdomains" />
+            <span class="cds-toggle__switch"></span>
+            <span>
+              <span class="cds-toggle__label">Enable Subdomain Crawling</span>
+              <div class="cds-toggle__helper">Discover and crawl subdomains of the target domain</div>
+            </span>
+          </label>
+        </div>
+        <div id="subdomainOptions" class="hidden">
+          <label class="cds-label">Discovery Methods</label>
+          <div class="flex flex-wrap gap-3 mb-4">
+            <label class="cds-toggle">
+              <input type="checkbox" class="subdomain-method" value="dns" checked />
+              <span class="cds-toggle__switch"></span>
+              <span class="cds-toggle__label">DNS Brute Force</span>
+            </label>
+            <label class="cds-toggle">
+              <input type="checkbox" class="subdomain-method" value="ct" checked />
+              <span class="cds-toggle__switch"></span>
+              <span class="cds-toggle__label">Certificate Transparency</span>
+            </label>
+            <label class="cds-toggle">
+              <input type="checkbox" class="subdomain-method" value="links" checked />
+              <span class="cds-toggle__switch"></span>
+              <span class="cds-toggle__label">Link Analysis</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript Rendering -->
+    <div class="cds-accordion__item">
+      <button class="cds-accordion__heading" onclick="toggleAccordion(this)">
+        <svg class="cds-accordion__arrow" viewBox="0 0 16 16"><path d="M6 3.5L10.5 8 6 12.5z"/></svg>
+        JavaScript Rendering
+      </button>
+      <div class="cds-accordion__content">
+        <div class="mb-4">
+          <label class="cds-toggle">
+            <input type="checkbox" id="jsRender" />
+            <span class="cds-toggle__switch"></span>
+            <span>
+              <span class="cds-toggle__label">Enable JS Rendering</span>
+              <div class="cds-toggle__helper">Render pages with headless Chromium (Playwright) for SPA/React/Vue/Angular</div>
+            </span>
+          </label>
+        </div>
+        <div id="jsOptions" class="hidden">
+          <div class="cds-grid cds-grid--2col mb-4">
+            <div class="cds-form-group">
+              <label class="cds-label">Wait Time (seconds)</label>
+              <input id="jsWait" type="number" class="cds-number-input" value="5" min="1" max="30" step="0.5" />
+              <div class="cds-helper-text">Time to wait for JS execution</div>
+            </div>
+            <div class="cds-form-group">
+              <label class="cds-label">Browser Instances</label>
+              <input id="jsInstances" type="number" class="cds-number-input" value="3" min="1" max="10" />
+              <div class="cds-helper-text">Parallel browser contexts</div>
+            </div>
+          </div>
+          <label class="cds-label">Block Resources</label>
+          <div class="flex flex-wrap gap-3">
+            <label class="cds-toggle"><input type="checkbox" class="block-resource" value="image" /><span class="cds-toggle__switch"></span><span class="cds-toggle__label">Images</span></label>
+            <label class="cds-toggle"><input type="checkbox" class="block-resource" value="font" /><span class="cds-toggle__switch"></span><span class="cds-toggle__label">Fonts</span></label>
+            <label class="cds-toggle"><input type="checkbox" class="block-resource" value="media" /><span class="cds-toggle__switch"></span><span class="cds-toggle__label">Media</span></label>
+            <label class="cds-toggle"><input type="checkbox" class="block-resource" value="stylesheet" /><span class="cds-toggle__switch"></span><span class="cds-toggle__label">CSS</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bot Evasion -->
+    <div class="cds-accordion__item">
+      <button class="cds-accordion__heading" onclick="toggleAccordion(this)">
+        <svg class="cds-accordion__arrow" viewBox="0 0 16 16"><path d="M6 3.5L10.5 8 6 12.5z"/></svg>
+        Bot Evasion
+      </button>
+      <div class="cds-accordion__content">
+        <div class="mb-4">
+          <label class="cds-toggle">
+            <input type="checkbox" id="evasion" />
+            <span class="cds-toggle__switch"></span>
+            <span>
+              <span class="cds-toggle__label">Enable Anti-Bot Evasion</span>
+              <div class="cds-toggle__helper">User-Agent rotation, adaptive delays, fingerprint randomization</div>
+            </span>
+          </label>
+        </div>
+        <div class="mb-4">
+          <label class="cds-toggle">
+            <input type="checkbox" id="stealth" checked />
+            <span class="cds-toggle__switch"></span>
+            <span>
+              <span class="cds-toggle__label">Stealth Mode</span>
+              <div class="cds-toggle__helper">Inject stealth scripts (WebDriver override, WebGL spoof, canvas noise)</div>
+            </span>
+          </label>
+        </div>
+        <div class="cds-grid cds-grid--2col">
+          <div class="cds-form-group">
+            <label class="cds-label">Min Delay (seconds)</label>
+            <input id="delayMin" type="number" class="cds-number-input" value="0.5" min="0" max="10" step="0.1" />
+          </div>
+          <div class="cds-form-group">
+            <label class="cds-label">Max Delay (seconds)</label>
+            <input id="delayMax" type="number" class="cds-number-input" value="3.0" min="0" max="30" step="0.1" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- URL Filtering -->
+    <div class="cds-accordion__item">
+      <button class="cds-accordion__heading" onclick="toggleAccordion(this)">
+        <svg class="cds-accordion__arrow" viewBox="0 0 16 16"><path d="M6 3.5L10.5 8 6 12.5z"/></svg>
+        URL Filtering &amp; Extras
+      </button>
+      <div class="cds-accordion__content">
+        <div class="cds-grid cds-grid--2col mb-4">
+          <div class="cds-form-group">
+            <label class="cds-label">Include Patterns (comma-separated)</label>
+            <input id="includePatterns" type="text" class="cds-text-input" placeholder="/blog/,/products/" />
+            <div class="cds-helper-text">Only crawl URLs matching these patterns</div>
+          </div>
+          <div class="cds-form-group">
+            <label class="cds-label">Exclude Patterns (comma-separated)</label>
+            <input id="excludePatterns" type="text" class="cds-text-input" placeholder="/tag/,/author/,/page/" />
+            <div class="cds-helper-text">Skip URLs matching these patterns</div>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <label class="cds-toggle">
+            <input type="checkbox" id="checkExternal" />
+            <span class="cds-toggle__switch"></span>
+            <span class="cds-toggle__label">Check External Links</span>
+          </label>
+          <label class="cds-toggle">
+            <input type="checkbox" id="generateSitemap" />
+            <span class="cds-toggle__switch"></span>
+            <span class="cds-toggle__label">Generate XML Sitemap</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /accordion -->
+</div><!-- /section-crawl -->
+
+
+<!-- ==================== RESULTS SECTION ==================== -->
+<div id="section-results" class="section">
+
+  <div id="noResults" class="cds-notification cds-notification--info">
+    <div>
+      <div class="cds-notification__title">No crawl data</div>
+      <div class="cds-notification__body">Start a crawl from the Crawl tab to see results here.</div>
+    </div>
+  </div>
+
+  <div id="resultsContent" class="hidden">
+
+    <!-- Progress -->
+    <div id="progressArea" class="mb-6">
+      <div class="flex justify-between items-center mb-3">
+        <span class="cds-tag cds-tag--blue" id="statusTag">Running</span>
+        <span class="text-sm text-secondary" id="crawlUrl"></span>
+      </div>
+      <div class="cds-progress">
+        <div class="cds-progress__bar"><div class="cds-progress__fill" id="progressFill"></div></div>
+        <div class="cds-progress__label">
+          <span id="progressText">0 pages crawled</span>
+          <span id="progressRate"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="cds-grid cds-grid--4col mb-6" id="statsGrid">
+      <div class="cds-tile stat-card">
+        <div class="stat-card__value" id="statTotal">-</div>
+        <div class="stat-card__label">Total URLs</div>
+      </div>
+      <div class="cds-tile stat-card">
+        <div class="stat-card__value" id="statInternal">-</div>
+        <div class="stat-card__label">Internal</div>
+      </div>
+      <div class="cds-tile stat-card">
+        <div class="stat-card__value" id="statExternal">-</div>
+        <div class="stat-card__label">External</div>
+      </div>
+      <div class="cds-tile stat-card">
+        <div class="stat-card__value" id="statSubdomains">-</div>
+        <div class="stat-card__label">Subdomains</div>
+      </div>
+    </div>
+
+    <!-- Status + Issues row -->
+    <div class="cds-grid cds-grid--2col mb-6">
+      <div class="cds-tile">
+        <div class="cds-tile__heading">Status Code Distribution</div>
+        <div id="statusChart"></div>
+      </div>
+      <div class="cds-tile">
+        <div class="cds-tile__heading">Top Issues</div>
+        <div id="issuesPanel" style="max-height:300px;overflow-y:auto;"></div>
+      </div>
+    </div>
+
+    <!-- Error/Log Panel -->
+    <div id="errorPanel" class="hidden mb-6">
+      <div class="cds-notification cds-notification--error">
+        <div>
+          <div class="cds-notification__title">Crawl Error</div>
+          <div class="cds-notification__body" id="errorMessage"></div>
+        </div>
+      </div>
+    </div>
+    <div id="logPanel" class="hidden mb-6">
+      <div class="cds-tile">
+        <div class="flex justify-between items-center mb-3">
+          <div class="cds-tile__heading" style="margin-bottom:0">Log</div>
+          <button class="cds-btn cds-btn--ghost cds-btn--sm" onclick="document.getElementById('logPanel').classList.add('hidden')">Hide</button>
+        </div>
+        <div class="cds-log" id="logContent"></div>
+      </div>
+    </div>
+
+    <!-- Top Pages Table -->
+    <div class="cds-tile mb-6">
+      <div class="cds-tile__heading">Top Pages by Inlinks</div>
+      <div class="cds-table-wrap">
+        <table class="cds-table">
+          <thead><tr>
+            <th>URL</th><th>Status</th><th>Title</th><th>Inlinks</th><th>Depth</th>
+          </tr></thead>
+          <tbody id="topPagesBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /section-results -->
+
+
+<!-- ==================== PAGES SECTION ==================== -->
+<div id="section-pages" class="section">
+
+  <div id="noPagesMsg" class="cds-notification cds-notification--info">
+    <div>
+      <div class="cds-notification__title">No page data</div>
+      <div class="cds-notification__body">Complete a crawl to browse individual page data.</div>
+    </div>
+  </div>
+
+  <div id="pagesContent" class="hidden">
+    <div class="search-input-wrapper">
+      <svg viewBox="0 0 16 16"><path d="M15.5 13.8 12 10.3A6.5 6.5 0 1 0 10.3 12l3.5 3.5a1.2 1.2 0 0 0 1.7-1.7ZM2 6.5A4.5 4.5 0 1 1 6.5 11 4.5 4.5 0 0 1 2 6.5Z"/></svg>
+      <input type="text" class="cds-text-input" id="pageSearch" placeholder="Search pages by URL or title..." oninput="filterPages()" />
+    </div>
+    <div class="cds-table-wrap">
+      <table class="cds-table">
+        <thead><tr>
+          <th onclick="sortPages('url')">URL</th>
+          <th onclick="sortPages('status')">Status</th>
+          <th onclick="sortPages('title')">Title</th>
+          <th onclick="sortPages('wordCount')">Words</th>
+          <th onclick="sortPages('indexable')">Indexable</th>
+          <th onclick="sortPages('depth')">Depth</th>
+          <th onclick="sortPages('inlinks')">Inlinks</th>
+          <th onclick="sortPages('responseTime')">Time (s)</th>
+        </tr></thead>
+        <tbody id="pagesTableBody"></tbody>
+      </table>
+    </div>
+    <div class="flex justify-between items-center mt-4">
+      <span class="text-sm text-secondary" id="pagesCount"></span>
+      <div class="flex gap-3">
+        <button class="cds-btn cds-btn--ghost cds-btn--sm" id="btnPrevPage" onclick="changePage(-1)">← Previous</button>
+        <button class="cds-btn cds-btn--ghost cds-btn--sm" id="btnNextPage" onclick="changePage(1)">Next →</button>
+      </div>
+    </div>
+  </div>
+</div><!-- /section-pages -->
+
+
+<!-- ==================== SESSIONS SECTION ==================== -->
+<div id="section-sessions" class="section">
+  <div class="cds-tile">
+    <div class="cds-tile__heading">Crawl Sessions</div>
+    <div class="cds-table-wrap">
+      <table class="cds-table">
+        <thead><tr><th>ID</th><th>URL</th><th>Status</th><th>Started</th></tr></thead>
+        <tbody id="sessionsBody"><tr><td colspan="4" style="text-align:center;padding:24px">No sessions yet</td></tr></tbody>
+      </table>
+    </div>
+    <div class="mt-4">
+      <button class="cds-btn cds-btn--ghost cds-btn--sm" onclick="loadSessions()">
+        Refresh
+        <svg viewBox="0 0 16 16"><path d="M13.9 8A5.9 5.9 0 1 1 8 2.1V0l4 3-4 3V4.1A3.9 3.9 0 1 0 11.9 8Z"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+</div><!-- /cds-content -->
+
+
+<script>
+// === State ===
+let currentSessionId = null;
+let pollTimer = null;
+let allPages = [];
+let filteredPages = [];
+let pageSort = { key: 'url', asc: true };
+let currentPage = 0;
+const PAGE_SIZE = 50;
+
+// === Navigation ===
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  document.querySelectorAll('.cds-header__nav-item').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  if (name === 'sessions') loadSessions();
+}
+
+// === Accordion ===
+function toggleAccordion(btn) {
+  btn.parentElement.classList.toggle('open');
+}
+
+// === Toggle dependent options ===
+document.getElementById('subdomains').addEventListener('change', function() {
+  document.getElementById('subdomainOptions').classList.toggle('hidden', !this.checked);
+});
+document.getElementById('jsRender').addEventListener('change', function() {
+  document.getElementById('jsOptions').classList.toggle('hidden', !this.checked);
+});
+
+// === Start Crawl ===
+function startCrawl() {
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url) { document.getElementById('urlInput').focus(); return; }
+
+  const data = {
+    url,
+    maxUrls: +document.getElementById('maxUrls').value,
+    maxDepth: +document.getElementById('maxDepth').value,
+    concurrent: +document.getElementById('concurrent').value,
+    timeout: +document.getElementById('timeout').value,
+    exportFormat: document.getElementById('exportFormat').value,
+    respectRobots: document.getElementById('respectRobots').checked,
+    subdomains: document.getElementById('subdomains').checked,
+    jsRender: document.getElementById('jsRender').checked,
+    jsWait: +document.getElementById('jsWait').value,
+    jsInstances: +document.getElementById('jsInstances').value,
+    evasion: document.getElementById('evasion').checked,
+    stealth: document.getElementById('stealth').checked,
+    delayMin: +document.getElementById('delayMin').value,
+    delayMax: +document.getElementById('delayMax').value,
+    includePatterns: document.getElementById('includePatterns').value,
+    excludePatterns: document.getElementById('excludePatterns').value,
+    checkExternal: document.getElementById('checkExternal').checked,
+    generateSitemap: document.getElementById('generateSitemap').checked,
+  };
+
+  // Subdomain methods
+  if (data.subdomains) {
+    data.subdomainMethods = [...document.querySelectorAll('.subdomain-method:checked')].map(c => c.value);
+  }
+
+  // Block resources
+  if (data.jsRender) {
+    data.blockResources = [...document.querySelectorAll('.block-resource:checked')].map(c => c.value);
+  }
+
+  const btn = document.getElementById('btnStart');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="cds-loading"></span> Starting...';
+
+  fetch('/api/crawl', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(r => r.json())
+  .then(resp => {
+    if (resp.error) {
+      alert(resp.error);
+      btn.disabled = false;
+      btn.innerHTML = 'Start Crawl <svg viewBox="0 0 32 32"><path d="M16 2A14 14 0 1 0 30 16 14 14 0 0 0 16 2Zm6.2 14.6-8 5A.75.75 0 0 1 13 21V11a.75.75 0 0 1 1.2-.6l8 5a.75.75 0 0 1 0 1.2Z"/></svg>';
+      return;
+    }
+    currentSessionId = resp.sessionId;
+    // Switch to results
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById('section-results').classList.add('active');
+    document.querySelectorAll('.cds-header__nav-item').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.cds-header__nav-item')[1].classList.add('active');
+
+    document.getElementById('noResults').classList.add('hidden');
+    document.getElementById('resultsContent').classList.remove('hidden');
+    document.getElementById('crawlUrl').textContent = url;
+
+    btn.disabled = false;
+    btn.innerHTML = 'Start Crawl <svg viewBox="0 0 32 32"><path d="M16 2A14 14 0 1 0 30 16 14 14 0 0 0 16 2Zm6.2 14.6-8 5A.75.75 0 0 1 13 21V11a.75.75 0 0 1 1.2-.6l8 5a.75.75 0 0 1 0 1.2Z"/></svg>';
+
+    startPolling();
+  })
+  .catch(err => {
+    alert('Request failed: ' + err.message);
+    btn.disabled = false;
+    btn.innerHTML = 'Start Crawl <svg viewBox="0 0 32 32"><path d="M16 2A14 14 0 1 0 30 16 14 14 0 0 0 16 2Zm6.2 14.6-8 5A.75.75 0 0 1 13 21V11a.75.75 0 0 1 1.2-.6l8 5a.75.75 0 0 1 0 1.2Z"/></svg>';
+  });
+}
+
+// === Polling ===
+function startPolling() {
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(pollStatus, 1500);
+  pollStatus();
+}
+
+function pollStatus() {
+  if (!currentSessionId) return;
+  fetch('/api/status?id=' + currentSessionId)
+    .then(r => r.json())
+    .then(data => updateResults(data))
+    .catch(() => {});
+}
+
+function updateResults(data) {
+  // Status tag
+  const tag = document.getElementById('statusTag');
+  if (data.status === 'running') {
+    tag.className = 'cds-tag cds-tag--blue'; tag.textContent = 'Running';
+  } else if (data.status === 'complete') {
+    tag.className = 'cds-tag cds-tag--green'; tag.textContent = 'Complete';
+    clearInterval(pollTimer);
+  } else if (data.status === 'error') {
+    tag.className = 'cds-tag cds-tag--red'; tag.textContent = 'Error';
+    clearInterval(pollTimer);
+  } else {
+    tag.className = 'cds-tag cds-tag--gray'; tag.textContent = data.status;
+  }
+
+  // Error display
+  if (data.error) {
+    document.getElementById('errorPanel').classList.remove('hidden');
+    document.getElementById('errorMessage').textContent = data.error;
+  } else {
+    document.getElementById('errorPanel').classList.add('hidden');
+  }
+
+  // Log display
+  if (data.log && data.log.length > 0) {
+    document.getElementById('logPanel').classList.remove('hidden');
+    document.getElementById('logContent').textContent = data.log.join('\n---\n');
+  }
+
+  // Progress
+  const p = data.progress || {};
+  if (p.visited != null) {
+    const max = data.config?.maxUrls || 5000;
+    const pct = Math.min(100, (p.visited / max) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = `${p.visited} pages crawled, ${p.queued || 0} queued`;
+    document.getElementById('progressRate').textContent = `${p.rate || 0} pages/s · ${p.elapsed || 0}s`;
+  }
+
+  // Result data
+  const r = data.result;
+  if (r) {
+    document.getElementById('statTotal').textContent = r.totalUrls?.toLocaleString() || '-';
+    document.getElementById('statInternal').textContent = r.internal?.toLocaleString() || '-';
+    document.getElementById('statExternal').textContent = r.external?.toLocaleString() || '-';
+    document.getElementById('statSubdomains').textContent = r.subdomains || '0';
+
+    // Status chart
+    renderStatusChart(r.statusDist || {});
+
+    // Issues
+    renderIssues(r.issues || {});
+
+    // Top pages
+    renderTopPages(r.topPages || []);
+
+    // Pages tab data
+    if (r.pages) {
+      allPages = r.pages;
+      filteredPages = allPages;
+      currentPage = 0;
+      renderPagesTable();
+      document.getElementById('noPagesMsg').classList.add('hidden');
+      document.getElementById('pagesContent').classList.remove('hidden');
+    }
+  }
+}
+
+// === Charts ===
+const STATUS_COLORS = {
+  '2': '#42be65', '3': '#4589ff', '4': '#f1c21b', '5': '#ff8389'
+};
+
+function renderStatusChart(dist) {
+  const el = document.getElementById('statusChart');
+  const total = Object.values(dist).reduce((a, b) => a + b, 0) || 1;
+  const entries = Object.entries(dist).sort((a, b) => a[0].localeCompare(b[0]));
+  el.innerHTML = entries.map(([code, count]) => {
+    const color = STATUS_COLORS[code[0]] || '#6f6f6f';
+    const width = Math.max(2, (count / total) * 100);
+    return `<div class="chart-bar">
+      <span class="chart-bar__label">${code}</span>
+      <div class="chart-bar__fill" style="width:${width}%;background:${color}"></div>
+      <span class="chart-bar__value">${count}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderIssues(issues) {
+  const el = document.getElementById('issuesPanel');
+  const entries = Object.entries(issues);
+  if (!entries.length) { el.innerHTML = '<div class="text-sm text-secondary" style="padding:12px">No issues detected</div>'; return; }
+  el.innerHTML = entries.map(([name, count]) =>
+    `<div class="issue-row"><span class="issue-row__name">${escHtml(name)}</span><span class="issue-row__count">${count}</span></div>`
+  ).join('');
+}
+
+function renderTopPages(pages) {
+  const el = document.getElementById('topPagesBody');
+  el.innerHTML = pages.slice(0, 20).map(p => `<tr>
+    <td title="${escHtml(p.url)}">${escHtml(truncate(p.url, 60))}</td>
+    <td><span class="cds-tag ${statusTagClass(p.status)}">${p.status}</span></td>
+    <td title="${escHtml(p.title)}">${escHtml(truncate(p.title, 50))}</td>
+    <td>${p.inlinks}</td>
+    <td>${p.depth}</td>
+  </tr>`).join('');
+}
+
+// === Pages Table ===
+function renderPagesTable() {
+  const start = currentPage * PAGE_SIZE;
+  const slice = filteredPages.slice(start, start + PAGE_SIZE);
+  const el = document.getElementById('pagesTableBody');
+  el.innerHTML = slice.map(p => `<tr>
+    <td title="${escHtml(p.url)}">${escHtml(truncate(p.url, 50))}</td>
+    <td><span class="cds-tag ${statusTagClass(p.status)}">${p.status}</span></td>
+    <td title="${escHtml(p.title)}">${escHtml(truncate(p.title, 40))}</td>
+    <td>${p.wordCount || 0}</td>
+    <td>${p.indexable ? '<span class="status-dot status-dot--success"></span>Yes' : '<span class="status-dot status-dot--error"></span>No'}</td>
+    <td>${p.depth}</td>
+    <td>${p.inlinks}</td>
+    <td>${p.responseTime || '-'}</td>
+  </tr>`).join('');
+  document.getElementById('pagesCount').textContent = `Showing ${start + 1}-${Math.min(start + PAGE_SIZE, filteredPages.length)} of ${filteredPages.length}`;
+  document.getElementById('btnPrevPage').disabled = currentPage === 0;
+  document.getElementById('btnNextPage').disabled = start + PAGE_SIZE >= filteredPages.length;
+}
+
+function filterPages() {
+  const q = document.getElementById('pageSearch').value.toLowerCase();
+  filteredPages = q ? allPages.filter(p => p.url.toLowerCase().includes(q) || (p.title || '').toLowerCase().includes(q)) : allPages;
+  currentPage = 0;
+  renderPagesTable();
+}
+
+function sortPages(key) {
+  if (pageSort.key === key) pageSort.asc = !pageSort.asc;
+  else { pageSort.key = key; pageSort.asc = true; }
+  filteredPages.sort((a, b) => {
+    let va = a[key], vb = b[key];
+    if (typeof va === 'string') return pageSort.asc ? va.localeCompare(vb) : vb.localeCompare(va);
+    return pageSort.asc ? (va - vb) : (vb - va);
+  });
+  currentPage = 0;
+  renderPagesTable();
+}
+
+function changePage(delta) {
+  currentPage += delta;
+  renderPagesTable();
+}
+
+// === Sessions ===
+function loadSessions() {
+  fetch('/api/sessions')
+    .then(r => r.json())
+    .then(data => {
+      const el = document.getElementById('sessionsBody');
+      const entries = Object.entries(data);
+      if (!entries.length) {
+        el.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:24px">No sessions yet</td></tr>';
+        return;
+      }
+      el.innerHTML = entries.map(([id, s]) => `<tr style="cursor:pointer" onclick="loadSession('${id}')">
+        <td class="text-mono">${id}</td>
+        <td title="${escHtml(s.url)}">${escHtml(truncate(s.url, 50))}</td>
+        <td><span class="cds-tag ${s.status === 'complete' ? 'cds-tag--green' : s.status === 'error' ? 'cds-tag--red' : 'cds-tag--blue'}">${s.status}</span></td>
+        <td>${s.startTime ? new Date(s.startTime).toLocaleString() : '-'}</td>
+      </tr>`).join('');
+    });
+}
+
+function loadSession(id) {
+  currentSessionId = id;
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-results').classList.add('active');
+  document.querySelectorAll('.cds-header__nav-item').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.cds-header__nav-item')[1].classList.add('active');
+  document.getElementById('noResults').classList.add('hidden');
+  document.getElementById('resultsContent').classList.remove('hidden');
+  startPolling();
+}
+
+// === Helpers ===
+function escHtml(s) { return s ? s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : ''; }
+function truncate(s, n) { return s && s.length > n ? s.slice(0, n) + '...' : (s || ''); }
+function statusTagClass(code) {
+  if (code >= 200 && code < 300) return 'cds-tag--green';
+  if (code >= 300 && code < 400) return 'cds-tag--blue';
+  if (code >= 400 && code < 500) return 'cds-tag--yellow';
+  if (code >= 500) return 'cds-tag--red';
+  return 'cds-tag--gray';
+}
+
+// Allow Enter key on URL input
+document.getElementById('urlInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') startCrawl();
+});
+</script>
+
+</body>
+</html>

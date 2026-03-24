@@ -1,0 +1,62 @@
+# Core HTTP
+aiohttp>=3.9.0
+httpx>=0.27.0
+requests>=2.31.0
+
+# HTML Parsing
+beautifulsoup4>=4.12.0
+lxml>=5.1.0
+html5lib>=1.1
+
+# JavaScript Rendering (Playwright only - pyppeteer is deprecated)
+playwright>=1.40.0
+
+# Async Support
+asyncio-throttle>=1.0.2
+aiofiles>=23.2.0
+
+# URL & DNS
+tldextract>=5.1.0
+dnspython>=2.6.0
+
+# Bot Evasion
+fake-useragent>=1.4.0
+playwright-stealth>=1.0.6
+
+# Data Processing
+pandas>=2.1.0
+openpyxl>=3.1.0
+
+# Structured Data
+extruct>=0.16.0
+pyld>=2.0.0
+rdflib>=7.0.0
+
+# Robots.txt
+robotexclusionrulesparser>=1.7.1
+
+# Security / SSL
+cryptography>=42.0.0
+certifi>=2024.2.0
+
+# Hashing
+xxhash>=3.4.0
+
+# CLI
+click>=8.1.0
+rich>=13.7.0
+tqdm>=4.66.0
+
+# Logging
+loguru>=0.7.0
+
+# Config
+pyyaml>=6.0.0
+pydantic>=2.5.0
+
+# Visualization
+networkx>=3.2.0
+matplotlib>=3.8.0
+
+# Rate Limiting
+aiolimiter>=1.1.0
