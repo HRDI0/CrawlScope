@@ -292,7 +292,3 @@ python-seo-spider/
 ## CSV 인코딩
 
 모든 CSV 파일은 UTF-8 BOM (`utf-8-sig`) 인코딩으로 저장됩니다. Windows Excel에서 한글이 정상적으로 표시됩니다.
-
-## 라이선스
-
-MIT
