@@ -62,41 +62,38 @@ Screaming Frog SEO Spider의 기능을 Python으로 구현한 SEO 크롤링 및 
 
 ### 내보내기 형식
 
-**27개 CSV 파일** (Screaming Frog 호환 형식):
+**26개 출력 파일** (23개 CSV + 3개 JSON) (Screaming Frog 호환 형식):
 
 | 파일 | 설명 |
 |------|------|
-| `internal_all.csv` | 내부 전체 페이지 (63개 컬럼) |
-| `external_all.csv` | 외부 링크 집계 |
-| `images_all.csv` | 이미지 분석 (alt 텍스트, 크기) |
-| `css.csv` | CSS 리소스 |
-| `javascript.csv` | JavaScript 리소스 |
-| `hreflang_all.csv` | Hreflang 주석 |
-| `structured_data_all.csv` | 구조화 데이터 타입 및 유효성 |
-| `response_codes_all.csv` | HTTP 응답 코드 분석 |
-| `security_all.csv` | 보안 헤더 |
-| `content_all.csv` | 콘텐츠 품질 및 가독성 |
-| `links_all.csv` | 링크 구조 및 Link Score |
-| `canonicals_all.csv` | 캐노니컬 태그 분석 |
-| `directives_all.csv` | 크롤 지시자 (robots, canonical) |
-| `h1_all.csv` | H1 태그 분석 |
-| `h2_all.csv` | H2 태그 분석 |
-| `meta_keywords_all.csv` | 메타 키워드 |
-| `pagination_all.csv` | 페이지네이션 (rel next/prev) |
-| `url_all.csv` | URL 구조 분석 |
+| `internal_all.csv` | 내부 전체 페이지 (61개 컬럼) |
+| `url_all.csv` | URL 레벨 데이터 |
+| `response_codes_all.csv` | 상태 코드 및 응답 시간 |
+| `images_all.csv` | 이미지 출현 (페이지당 1행) |
+| `canonicals_all.csv` | 캐노니컬 상태 분석 |
+| `directives_all.csv` | Meta Robots 및 지시자 |
+| `h1_all.csv` | H1 헤딩 데이터 |
+| `h2_all.csv` | H2 헤딩 데이터 |
+| `content_all.csv` | 가독성 및 콘텐츠 메트릭 |
+| `hreflang_all.csv` | 다국어 주석 |
+| `pagination_all.csv` | rel="next"/"prev" 데이터 |
+| `structured_data_all.csv` | Schema.org 데이터 |
+| `security_all.csv` | HTTPS 및 보안 헤더 |
+| `javascript_all.csv` | JS 렌더링 비교 |
+| `links_all.csv` | 인링크/아웃링크 분석 |
+| `inlinks.csv` | Source→Target 링크 매핑 |
+| `redirects.csv` | 리다이렉트 체인 추적 |
+| `issues.csv` | 근거를 포함한 SEO 이슈 |
+| `external_all.csv` | 외부 URL |
 | `page_titles_duplicate.csv` | 중복 타이틀 |
 | `meta_description_duplicate.csv` | 중복 메타 설명 |
-| `javascript_all.csv` | JS 렌더링 전/후 비교 |
-| `custom_extraction_all.csv` | 커스텀 추출 결과 |
-| `custom_search_all.csv` | 커스텀 검색 매칭 |
-| `issues.csv` | SEO 이슈 (심각도 포함) |
-| `redirects.csv` | 리다이렉트 체인 |
-| `inlinks.csv` | 인링크 집계 |
-| `sitemaps_all.csv` | 사이트맵 URL |
+| `statistics_summary.csv` | 31개 메트릭 (카운팅 단위 포함) |
+| `crawl_warnings.csv` | 크롤 경고 로그 |
 
 추가 내보내기:
-- **XLSX** — 26개 시트 Excel 워크북
-- **JSON** — 전체 크롤 결과 + 요약
+- **statistics_summary.json** — CSV와 동일한 메트릭 (JSON 형식)
+- **run_manifest.json** — 크롤 설정 및 파일 목록
+- **run_summary.json** — 상태 분포 및 상위 이슈
 
 ### 웹 UI
 - Carbon Design System (IBM) 다크 테마 인터페이스
@@ -189,18 +186,47 @@ asyncio.run(main())
 ## 출력 구조
 
 ```
-crawl_output/
-└── example/              # 도메인 기반 폴더
-    ├── internal_all.csv
-    ├── external_all.csv
-    ├── content_all.csv
-    ├── links_all.csv
-    ├── security_all.csv
-    ├── javascript_all.csv
-    ├── ... (총 27개 CSV 파일)
-    ├── crawl_report.xlsx
-    └── crawl_results.json
+crawl_output/{domain}/
+├── internal_all.csv          # 내부 전체 페이지 (61개 컬럼)
+├── url_all.csv               # URL 레벨 데이터
+├── response_codes_all.csv    # 상태 코드 및 응답 시간
+├── images_all.csv            # 이미지 출현 (페이지당 1행)
+├── canonicals_all.csv        # 캐노니컬 상태 분석
+├── directives_all.csv        # Meta Robots 및 지시자
+├── h1_all.csv                # H1 헤딩 데이터
+├── h2_all.csv                # H2 헤딩 데이터
+├── content_all.csv           # 가독성 및 콘텐츠 메트릭
+├── hreflang_all.csv          # 다국어 주석
+├── pagination_all.csv        # rel="next"/"prev" 데이터
+├── structured_data_all.csv   # Schema.org 데이터
+├── security_all.csv          # HTTPS 및 보안 헤더
+├── javascript_all.csv        # JS 렌더링 비교
+├── links_all.csv             # 인링크/아웃링크 분석
+├── inlinks.csv               # Source→Target 링크 매핑
+├── redirects.csv             # 리다이렉트 체인 추적
+├── issues.csv                # 근거를 포함한 SEO 이슈
+├── external_all.csv          # 외부 URL
+├── page_titles_duplicate.csv # 중복 타이틀
+├── meta_description_duplicate.csv
+├── statistics_summary.csv    # 31개 메트릭 (카운팅 단위 포함)
+├── crawl_warnings.csv        # 크롤 경고 로그
+├── statistics_summary.json   # CSV와 동일한 메트릭 (JSON)
+├── run_manifest.json         # 크롤 설정 및 파일 목록
+└── run_summary.json          # 상태 분포 및 상위 이슈
 ```
+
+## 주요 개선사항 (v2)
+
+- **Screaming Frog 호환 CSV 명명** — 표준 명명 규칙을 따르는 26개 출력 파일
+- **확장된 데이터셋** — 포괄적인 SEO 메트릭을 포함한 23개 CSV + 3개 JSON 파일
+- **근거 포함 issues.csv** — SEO 이슈에 근거 컬럼 및 source_table 참조로 근본 원인 분석 가능
+- **statistics_summary** — 프로그래밍 방식 접근을 위한 메트릭 이름, 값, 카운팅 단위, 범위 포함
+- **캐노니컬 상태 분류** — Missing / Self-Referencing / Canonicalised / Canonical to Redirect / Canonical to Non-200
+- **리다이렉트 상태 분류** — Redirect Chain / Redirect Loop 감지
+- **이미지 출현 기반 카운팅** — 페이지당 1행, Alt 속성 없음 vs Alt 텍스트 없음 구분
+- **제목/메타 설명/H1 상태** — 분류 및 전체 페이지 중복 감지
+- **근사 중복 감지** — closest_similarity_match 및 near_duplicate_count 채우기로 콘텐츠 중복 제거
+- **프로그래밍 방식 접근** — run_manifest.json 및 run_summary.json으로 자동화 및 통합 지원
 
 ## 설정
 
@@ -274,7 +300,8 @@ python-seo-spider/
 │       └── logging_config.py
 ├── crawl_output/              # 생성된 출력 (gitignore 대상)
 ├── 산출물_컬럼_명세서.xlsx      # 컬럼 명세서
-└── SEO_GEO_분석_가이드.md      # SEO/GEO 분석 가이드
+├── SEO_GEO_분석_가이드.md      # SEO/GEO 분석 가이드
+└── SEO_크롤_데이터_분석_방법론.md  # 크롤 데이터 분석 방법론
 ```
 
 ## 문서
@@ -282,6 +309,7 @@ python-seo-spider/
 - **[CLI_OPTIONS.md](CLI_OPTIONS.md)** — CLI 전체 옵션 레퍼런스 및 사용 예시 (영어/한국어)
 - **[산출물_컬럼_명세서.xlsx](산출물_컬럼_명세서.xlsx)** — 27개 CSV 파일, 26개 XLSX 시트, JSON 필드의 전체 컬럼 명세 (한/영)
 - **[SEO_GEO_분석_가이드.md](SEO_GEO_분석_가이드.md)** — 크롤 데이터를 활용한 SEO/GEO 제안서 작성 가이드 (시각화 전략, Python 분석 코드 예시 포함)
+- **[SEO_크롤_데이터_분석_방법론.md](SEO_크롤_데이터_분석_방법론.md)** — 크롤 데이터 분석 방법론: CSV 컬럼별 정상/비정상 기준, Python+Pandas+Seaborn EDA 코드, Looker Studio·Tableau 대시보드 구축 가이드
 
 ## 요구사항
 

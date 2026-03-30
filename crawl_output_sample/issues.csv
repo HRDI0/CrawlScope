@@ -1,0 +1,94 @@
+﻿URL,Category,Severity,Issue Type,Description,Evidence,Current Value,Recommendation,Source Table,Counting Unit
+https://www.example.com/,Page Titles,warning,Below 30 Characters,,Example Domain - Home Page,29 chars: Example Domain - Home Page,Title should be 30-60 characters,internal_all.csv,page
+https://www.example.com/,Meta Description,info,Below 70 Characters,,"Welcome to Example.com, your trusted source for examples and demos.",67 chars,,internal_all.csv,page
+https://www.example.com/,Images,info,Missing Alt Text,,https://www.example.com/hero.jpg,https://www.example.com/hero.jpg,,images_all.csv,image
+https://www.example.com/,Images,warning,Missing Alt Attribute,,https://www.example.com/banner.jpg,https://www.example.com/banner.jpg,,images_all.csv,image
+https://www.example.com/,Images,info,Alt Text Over 100 Characters,,AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120 chars,,images_all.csv,image
+https://www.example.com/,Canonicals,info,Self-Referencing Canonical,,https://www.example.com/,https://www.example.com/,,canonicals_all.csv,page
+https://www.example.com/,Hreflang,warning,Missing Return Tag,,,Target: https://www.example.com/,,,
+https://www.example.com/,Hreflang,warning,Missing Return Tag,,,Target: https://www.example.com/ko/,,,
+https://www.example.com/about,Page Titles,warning,Below 30 Characters,,About Us - Example Domain,25 chars: About Us - Example Domain,Title should be 30-60 characters,internal_all.csv,page
+https://www.example.com/about,Meta Description,info,Below 70 Characters,,Learn about Example.com and our mission to provide quality examples.,67 chars,,internal_all.csv,page
+https://www.example.com/about,Canonicals,info,Self-Referencing Canonical,,https://www.example.com/about,https://www.example.com/about,,canonicals_all.csv,page
+https://www.example.com/about,Security,info,Missing X-Content-Type-Options,,,,,,
+https://www.example.com/about,Structured Data,info,No Structured Data,,https://www.example.com/about,,Consider adding JSON-LD structured data,structured_data_all.csv,page
+https://www.example.com/about,Social,info,Missing og:title,,,,,,
+https://www.example.com/about,Social,info,Missing og:description,,,,,,
+https://www.example.com/about,Social,info,Missing og:image,,,,,,
+https://www.example.com/about,Social,info,Missing Twitter Card,,,,,,
+https://www.example.com/about,Page Titles,warning,Duplicate,,About Us - Example Domain,Duplicate title across 2 pages,Each page should have a unique title,internal_all.csv,page
+https://www.example.com/about-us,Page Titles,error,Missing,,https://www.example.com/about-us,,"Add a unique, descriptive title tag",internal_all.csv,page
+https://www.example.com/about-us,Meta Description,warning,Missing,,https://www.example.com/about-us,,Add a unique meta description (120-160 chars),internal_all.csv,page
+https://www.example.com/about-us,H1,warning,Missing,,https://www.example.com/about-us,,Add a single H1 heading to the page,h1_all.csv,page
+https://www.example.com/about-us,Content,warning,Low Content (Under 100 Words),,,0 words,Add more substantial content,,
+https://www.example.com/about-us,Content,info,Low Text Ratio,Text to HTML ratio below 10%,,0.0%,,,
+https://www.example.com/about-us,Links,warning,Orphan Page,No internal pages link to this URL,,,,,
+https://www.example.com/about-us,Canonicals,info,Canonical Missing,,https://www.example.com/about-us,,,canonicals_all.csv,page
+https://www.example.com/about-us,Indexability,warning,Non-Indexable,,,Redirect (301),,,
+https://www.example.com/about-us,Security,info,Missing HSTS Header,,,,,,
+https://www.example.com/about-us,Security,info,Missing X-Content-Type-Options,,,,,,
+https://www.example.com/about-us,Structured Data,info,No Structured Data,,https://www.example.com/about-us,,Consider adding JSON-LD structured data,structured_data_all.csv,page
+https://www.example.com/about-us,Social,info,Missing og:title,,,,,,
+https://www.example.com/about-us,Social,info,Missing og:description,,,,,,
+https://www.example.com/about-us,Social,info,Missing og:image,,,,,,
+https://www.example.com/about-us,Social,info,Missing Twitter Card,,,,,,
+https://www.example.com/old-page,Response Codes,error,Not Found (404),,https://www.example.com/old-page,,,response_codes_all.csv,page
+https://www.example.com/services,Page Titles,warning,Below 30 Characters,,About Us - Example Domain,25 chars: About Us - Example Domain,Title should be 30-60 characters,internal_all.csv,page
+https://www.example.com/services,Meta Description,info,Below 70 Characters,,"Our services include web development, SEO auditing, and more.",62 chars,,internal_all.csv,page
+https://www.example.com/services,Images,info,Missing Alt Text,,https://www.example.com/dev.png,https://www.example.com/dev.png,,images_all.csv,image
+https://www.example.com/services,Canonicals,info,Self-Referencing Canonical,,https://www.example.com/services,https://www.example.com/services,,canonicals_all.csv,page
+https://www.example.com/services,Structured Data,info,No Structured Data,,https://www.example.com/services,,Consider adding JSON-LD structured data,structured_data_all.csv,page
+https://www.example.com/services,Social,info,Missing og:title,,,,,,
+https://www.example.com/services,Social,info,Missing og:description,,,,,,
+https://www.example.com/services,Social,info,Missing og:image,,,,,,
+https://www.example.com/services,Social,info,Missing Twitter Card,,,,,,
+https://www.example.com/services,Page Titles,warning,Duplicate,,About Us - Example Domain,Duplicate title across 2 pages,Each page should have a unique title,internal_all.csv,page
+https://www.example.com/blog,Page Titles,warning,Below 30 Characters,,Blog,4 chars: Blog,Title should be 30-60 characters,internal_all.csv,page
+https://www.example.com/blog,Meta Description,warning,Missing,,https://www.example.com/blog,,Add a unique meta description (120-160 chars),internal_all.csv,page
+https://www.example.com/blog,H1,warning,Missing,,https://www.example.com/blog,,Add a single H1 heading to the page,h1_all.csv,page
+https://www.example.com/blog,Headings,warning,H2 Without H1,,,,,,
+https://www.example.com/blog,Content,warning,Low Content (Under 100 Words),,,85 words,Add more substantial content,,
+https://www.example.com/blog,Content,info,Low Text Ratio,Text to HTML ratio below 10%,,8.0%,,,
+https://www.example.com/blog,Canonicals,info,Canonical Missing,,https://www.example.com/blog,,,canonicals_all.csv,page
+https://www.example.com/blog,Security,info,Missing HSTS Header,,,,,,
+https://www.example.com/blog,Security,info,Missing X-Content-Type-Options,,,,,,
+https://www.example.com/blog,Structured Data,info,No Structured Data,,https://www.example.com/blog,,Consider adding JSON-LD structured data,structured_data_all.csv,page
+https://www.example.com/blog,Social,info,Missing og:title,,,,,,
+https://www.example.com/blog,Social,info,Missing og:description,,,,,,
+https://www.example.com/blog,Social,info,Missing og:image,,,,,,
+https://www.example.com/blog,Social,info,Missing Twitter Card,,,,,,
+https://www.example.com/blog,Performance,info,Response Time Over 1s,,,1.20s,,,
+https://www.example.com/contact,Page Titles,warning,Below 30 Characters,,Contact Us - Example Domain,27 chars: Contact Us - Example Domain,Title should be 30-60 characters,internal_all.csv,page
+https://www.example.com/contact,Meta Description,info,Below 70 Characters,,Get in touch with Example.com for support.,43 chars,,internal_all.csv,page
+https://www.example.com/contact,H1,warning,Multiple,,Contact Us | Get In Touch,2 H1 tags found,Use only one H1 per page,h1_all.csv,page
+https://www.example.com/contact,Content,info,Thin Content (Under 200 Words),,,150 words,,,
+https://www.example.com/contact,Canonicals,warning,Non-Self Canonical,,https://www.example.com/about,https://www.example.com/about,,canonicals_all.csv,page
+https://www.example.com/contact,Indexability,warning,Non-Indexable,,,Noindex in Meta Robots; Canonicalised to different URL,,,
+https://www.example.com/contact,Indexability,info,Nofollow in Meta Robots,,,,,,
+https://www.example.com/contact,Security,info,Missing HSTS Header,,,,,,
+https://www.example.com/contact,Security,info,Missing X-Content-Type-Options,,,,,,
+https://www.example.com/contact,Structured Data,error,Validation Error: Missing required property: name,,LocalBusiness,,,structured_data_all.csv,page
+https://www.example.com/contact,Structured Data,error,Validation Error: Missing required property: address,,LocalBusiness,,,structured_data_all.csv,page
+https://www.example.com/contact,Structured Data,warning,Validation Warning: Missing recommended property: telephone,,LocalBusiness,,,structured_data_all.csv,page
+https://www.example.com/contact,Structured Data,warning,Validation Warning: Missing recommended property: openingHours,,LocalBusiness,,,structured_data_all.csv,page
+https://www.example.com/contact,Structured Data,warning,Validation Warning: Missing recommended property: geo,,LocalBusiness,,,structured_data_all.csv,page
+https://www.example.com/contact,Social,info,Missing og:title,,,,,,
+https://www.example.com/contact,Social,info,Missing og:description,,,,,,
+https://www.example.com/contact,Social,info,Missing og:image,,,,,,
+https://www.example.com/contact,Social,info,Missing Twitter Card,,,,,,
+https://www.example.com/old-services,Page Titles,error,Missing,,https://www.example.com/old-services,,"Add a unique, descriptive title tag",internal_all.csv,page
+https://www.example.com/old-services,Meta Description,warning,Missing,,https://www.example.com/old-services,,Add a unique meta description (120-160 chars),internal_all.csv,page
+https://www.example.com/old-services,H1,warning,Missing,,https://www.example.com/old-services,,Add a single H1 heading to the page,h1_all.csv,page
+https://www.example.com/old-services,Content,warning,Low Content (Under 100 Words),,,0 words,Add more substantial content,,
+https://www.example.com/old-services,Content,info,Low Text Ratio,Text to HTML ratio below 10%,,0.0%,,,
+https://www.example.com/old-services,Links,warning,Orphan Page,No internal pages link to this URL,,,,,
+https://www.example.com/old-services,Canonicals,info,Canonical Missing,,https://www.example.com/old-services,,,canonicals_all.csv,page
+https://www.example.com/old-services,Indexability,warning,Non-Indexable,,,Redirect (302),,,
+https://www.example.com/old-services,Security,info,Missing HSTS Header,,,,,,
+https://www.example.com/old-services,Security,info,Missing X-Content-Type-Options,,,,,,
+https://www.example.com/old-services,Structured Data,info,No Structured Data,,https://www.example.com/old-services,,Consider adding JSON-LD structured data,structured_data_all.csv,page
+https://www.example.com/old-services,Social,info,Missing og:title,,,,,,
+https://www.example.com/old-services,Social,info,Missing og:description,,,,,,
+https://www.example.com/old-services,Social,info,Missing og:image,,,,,,
+https://www.example.com/old-services,Social,info,Missing Twitter Card,,,,,,
+https://www.example.com/old-services,Performance,info,Response Time Over 1s,,,1.50s,,,

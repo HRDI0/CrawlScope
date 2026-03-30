@@ -1,0 +1,9 @@
+﻿Address,Canonical Link Element 1,HTTP Canonical,Canonical Status,Indexability,Indexability Status,Meta Robots 1,X-Robots-Tag 1
+https://www.example.com/,https://www.example.com/,,Self-Referencing,Indexable,Indexable,,
+https://www.example.com/about,https://www.example.com/about,,Self-Referencing,Indexable,Indexable,,
+https://www.example.com/about-us,,,,Non-Indexable,Redirect (301),,
+https://www.example.com/old-page,,,,Non-Indexable,Non-200 Status Code (404),,
+https://www.example.com/services,https://www.example.com/services,,Self-Referencing,Indexable,Indexable,,
+https://www.example.com/blog,,,Missing,Indexable,Indexable,,
+https://www.example.com/contact,https://www.example.com/about,,Canonicalised,Non-Indexable,Noindex in Meta Robots; Canonicalised to different URL,"noindex, nofollow",
+https://www.example.com/old-services,,,,Non-Indexable,Redirect (302),,

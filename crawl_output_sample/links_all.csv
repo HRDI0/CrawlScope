@@ -1,0 +1,9 @@
+﻿Address,Indexability,Indexability Status,Crawl Depth,Link Score,Inlinks,Unique Inlinks,Unique JS Inlinks,% of Total,Outlinks,Unique Outlinks,Unique JS Outlinks,External Outlinks,Unique External Outlinks,Unique External JS Outlinks
+https://www.example.com/,Indexable,Indexable,0,0.0,2,2,0,28.57,5,4,0,1,1,0
+https://www.example.com/about,Indexable,Indexable,1,0.0,1,1,0,14.29,1,1,0,0,0,0
+https://www.example.com/about-us,Non-Indexable,Redirect (301),1,0.0,0,0,0,0.0,0,0,0,0,0,0
+https://www.example.com/old-page,Non-Indexable,Non-200 Status Code (404),2,0.0,0,0,0,0.0,0,0,0,0,0,0
+https://www.example.com/services,Indexable,Indexable,1,0.0,1,1,0,14.29,2,2,0,0,0,0
+https://www.example.com/blog,Indexable,Indexable,1,0.0,1,1,0,14.29,0,0,0,0,0,0
+https://www.example.com/contact,Non-Indexable,Noindex in Meta Robots; Canonicalised to different URL,1,0.0,2,2,0,28.57,0,0,0,0,0,0
+https://www.example.com/old-services,Non-Indexable,Redirect (302),2,0.0,0,0,0,0.0,0,0,0,0,0,0

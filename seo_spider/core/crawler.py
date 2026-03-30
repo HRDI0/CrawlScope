@@ -323,6 +323,8 @@ class SEOSpiderCrawler:
                         current_url = normalize_url(location, current_url) or location
                         page.is_redirect = True
                         page.redirect_type = str(response.status_code)
+                        if not page.original_status_code:
+                            page.original_status_code = response.status_code
                     else:
                         final_response = response
                         break
@@ -330,6 +332,8 @@ class SEOSpiderCrawler:
                     # Too many redirects
                     page.crawl_error = "Redirect loop detected"
                     page.is_error = True
+                    page.redirect_status = "Redirect Loop"
+                    page.redirect_chain_length = len(redirect_chain)
                     return page
 
                 if not final_response:
@@ -341,9 +345,32 @@ class SEOSpiderCrawler:
                 page.response_time = response_time
                 page.status_code = final_response.status_code
                 page.status_text = str(final_response.status_code)
+                if not page.original_status_code:
+                    page.original_status_code = final_response.status_code
                 page.final_url = str(final_response.url)
                 page.redirect_chain = redirect_chain
+                page.redirect_chain_length = len(redirect_chain)
+                if len(redirect_chain) > 1:
+                    page.redirect_status = "Redirect Chain"
                 page.content_type = final_response.headers.get('content-type', '')
+
+                # Determine page type
+                ct = page.content_type.lower()
+                if 'text/html' in ct:
+                    page.page_type = "HTML"
+                elif 'image/' in ct:
+                    page.page_type = "Image"
+                elif 'text/css' in ct:
+                    page.page_type = "CSS"
+                elif 'javascript' in ct or 'text/js' in ct:
+                    page.page_type = "JavaScript"
+                elif 'pdf' in ct:
+                    page.page_type = "PDF"
+                elif page.is_redirect:
+                    page.page_type = "Redirect"
+                else:
+                    page.page_type = "Other"
+
                 page.response_headers = dict(final_response.headers)
                 page.charset = self._extract_charset(final_response)
 

@@ -1,0 +1,9 @@
+﻿Address,Content Type,Status Code,Status,Indexability,Indexability Status,Inlinks,Response Time,Redirect URL,Redirect Type,Page Type
+https://www.example.com/,text/html; charset=utf-8,200,200 OK,Indexable,Indexable,2,0.342,,,HTML
+https://www.example.com/about,text/html; charset=utf-8,200,200 OK,Indexable,Indexable,1,0.523,,,HTML
+https://www.example.com/about-us,text/html; charset=utf-8,200,301 Moved Permanently,Non-Indexable,Redirect (301),0,0.800,https://www.example.com/about,301,Redirect
+https://www.example.com/old-page,text/html; charset=utf-8,404,404 Not Found,Non-Indexable,Non-200 Status Code (404),0,0.150,,,HTML
+https://www.example.com/services,text/html; charset=utf-8,200,200 OK,Indexable,Indexable,1,0.410,,,HTML
+https://www.example.com/blog,text/html; charset=utf-8,200,200 OK,Indexable,Indexable,1,1.200,,,HTML
+https://www.example.com/contact,text/html; charset=utf-8,200,200 OK,Non-Indexable,Noindex in Meta Robots; Canonicalised to different URL,2,0.350,,,HTML
+https://www.example.com/old-services,text/html,200,302 Found,Non-Indexable,Redirect (302),0,1.500,https://www.example.com/services,302,Redirect

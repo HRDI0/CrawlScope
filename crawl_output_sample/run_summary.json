@@ -1,0 +1,22 @@
+{
+  "domain": "example.com",
+  "total_pages": 8,
+  "status_code_distribution": {
+    "200": 7,
+    "404": 1
+  },
+  "top_issues": {
+    "Missing": 8,
+    "Missing og:title": 6,
+    "Missing og:description": 6,
+    "Missing og:image": 6,
+    "Missing Twitter Card": 6,
+    "Below 30 Characters": 5,
+    "Missing X-Content-Type-Options": 5,
+    "No Structured Data": 5,
+    "Below 70 Characters": 4,
+    "Missing HSTS Header": 4
+  },
+  "crawl_duration_seconds": 0.00112,
+  "pages_per_second": 7142.857142857143
+}

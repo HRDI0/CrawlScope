@@ -1,0 +1,8 @@
+﻿Address,Alt Text,Alt Text Length,Missing Alt Attribute,Missing Alt Text,Alt Over 100 Characters,Image File Size,Source Page,Indexability,Indexability Status
+https://www.example.com/logo.png,Example Logo,12,No,No,No,0,https://www.example.com/,Indexable,Indexable
+https://www.example.com/hero.jpg,,0,No,Yes,No,0,https://www.example.com/,Indexable,Indexable
+https://www.example.com/banner.jpg,,0,Yes,No,No,0,https://www.example.com/,Indexable,Indexable
+https://www.example.com/photo.jpg,AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,120,No,No,Yes,0,https://www.example.com/,Indexable,Indexable
+https://www.example.com/team.jpg,Our Team,8,No,No,No,0,https://www.example.com/about,Indexable,Indexable
+https://www.example.com/seo.png,SEO Service,11,No,No,No,0,https://www.example.com/services,Indexable,Indexable
+https://www.example.com/dev.png,,0,No,Yes,No,0,https://www.example.com/services,Indexable,Indexable

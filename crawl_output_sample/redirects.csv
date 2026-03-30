@@ -1,0 +1,3 @@
+﻿Source URL,Status Code,Redirect Type,Redirect Chain,Final URL,Chain Length,Redirect Status
+https://www.example.com/about-us,200,301,https://www.example.com/about-us,https://www.example.com/about,1,Redirect
+https://www.example.com/old-services,200,302,https://www.example.com/old-services -> https://www.example.com/services-new,https://www.example.com/services,2,Redirect Chain

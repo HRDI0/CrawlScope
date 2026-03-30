@@ -69,6 +69,11 @@ class HTMLAnalyzer:
         if self.config.extract_canonicals:
             self._extract_canonical(page, soup, url)
 
+        # Set canonical status if not already set
+        if not page.canonical_status:
+            if not page.canonical_url and not page.http_canonical:
+                page.canonical_status = "Missing"
+
         # Hreflang
         if self.config.extract_hreflang:
             self._extract_hreflang(page, soup, url)
@@ -229,13 +234,20 @@ class HTMLAnalyzer:
                 is_missing_alt_attribute=(alt is None),
                 is_missing_alt=(alt is not None and alt.strip() == ''),
                 alt_over_100=(len(alt) > 100 if alt else False),
+                source_page=base_url,
             )
             page.images.append(image)
 
         page.images_count = len(page.images)
         page.images_missing_alt = sum(
             1 for img in page.images
-            if img.is_missing_alt or img.is_missing_alt_attribute
+            if img.is_missing_alt
+        )
+        page.images_missing_alt_attribute = sum(
+            1 for img in page.images if img.is_missing_alt_attribute
+        )
+        page.images_with_alt_over_100 = sum(
+            1 for img in page.images if img.alt_over_100
         )
 
     def _extract_resources(self, page: PageData, soup: BeautifulSoup, base_url: str):
@@ -356,6 +368,14 @@ class HTMLAnalyzer:
             page.canonical_url = normalized
             page.canonical_is_self = (normalized == url or normalized == page.final_url)
             page.canonical_mismatch = not page.canonical_is_self
+
+        # Set canonical_status
+        if not page.canonical_url and not page.http_canonical:
+            page.canonical_status = "Missing"
+        elif page.canonical_is_self:
+            page.canonical_status = "Self-Referencing"
+        else:
+            page.canonical_status = "Canonicalised"
 
     def _extract_hreflang(self, page: PageData, soup: BeautifulSoup, url: str):
         """Extract hreflang annotations."""

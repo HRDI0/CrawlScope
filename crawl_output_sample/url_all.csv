@@ -1,0 +1,9 @@
+﻿Address,Content Type,Status Code,Status,Indexability,Indexability Status,Hash,URL Length,Folder Depth,Canonical Link Element 1,URL Encoded Address
+https://www.example.com/,text/html; charset=utf-8,200,200 OK,Indexable,Indexable,a9c8c5c0840281dd2ef4587b6ed6728d,26,0,https://www.example.com/,https://www.example.com/
+https://www.example.com/about,text/html; charset=utf-8,200,200 OK,Indexable,Indexable,3da6cc5e509b96d329b9a61e1716dde4,33,1,https://www.example.com/about,
+https://www.example.com/about-us,text/html; charset=utf-8,200,301 Moved Permanently,Non-Indexable,Redirect (301),,0,0,,
+https://www.example.com/old-page,text/html; charset=utf-8,404,404 Not Found,Non-Indexable,Non-200 Status Code (404),,0,0,,
+https://www.example.com/services,text/html; charset=utf-8,200,200 OK,Indexable,Indexable,c649cd81bd8305bca92722b20f48cc1b,36,1,https://www.example.com/services,
+https://www.example.com/blog,text/html; charset=utf-8,200,200 OK,Indexable,Indexable,3c1166dd58fdbe7402c10f9e8bd0ddc3,32,1,,
+https://www.example.com/contact,text/html; charset=utf-8,200,200 OK,Non-Indexable,Noindex in Meta Robots; Canonicalised to different URL,266d27871982cfd84273a5865a9554b4,35,1,https://www.example.com/about,
+https://www.example.com/old-services,text/html,200,302 Found,Non-Indexable,Redirect (302),,0,0,,

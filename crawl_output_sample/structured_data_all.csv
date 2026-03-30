@@ -1,0 +1,3 @@
+﻿Address,Format,Total Types,Unique Types,Type-1,Errors,Warnings,Indexability,Indexability Status
+https://www.example.com/,json-ld,2,2,WebSite,0,0,Indexable,Indexable
+https://www.example.com/contact,json-ld,1,1,LocalBusiness,2,3,Non-Indexable,Noindex in Meta Robots; Canonicalised to different URL

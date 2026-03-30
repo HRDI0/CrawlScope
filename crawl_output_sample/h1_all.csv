@@ -1,0 +1,9 @@
+﻿Address,Occurrences,H1-1,H1-1 Length,H1-2,H1-2 Length,Indexability,Indexability Status
+https://www.example.com/,1,Welcome to Example.com,22,,0,Indexable,Indexable
+https://www.example.com/about,1,About Us,8,,0,Indexable,Indexable
+https://www.example.com/about-us,0,,0,,0,Non-Indexable,Redirect (301)
+https://www.example.com/old-page,0,,0,,0,Non-Indexable,Non-200 Status Code (404)
+https://www.example.com/services,1,Our Services,12,,0,Indexable,Indexable
+https://www.example.com/blog,0,,0,,0,Indexable,Indexable
+https://www.example.com/contact,2,Contact Us,10,Get In Touch,12,Non-Indexable,Noindex in Meta Robots; Canonicalised to different URL
+https://www.example.com/old-services,0,,0,,0,Non-Indexable,Redirect (302)

@@ -62,41 +62,38 @@ A full-featured SEO crawling and analysis tool built in Python, inspired by Scre
 
 ### Export Formats
 
-**27 CSV files** matching Screaming Frog format:
+**26 output files** (23 CSV + 3 JSON) matching Screaming Frog format:
 
 | File | Description |
 |------|-------------|
-| `internal_all.csv` | All internal pages (63 columns) |
-| `external_all.csv` | External link aggregation |
-| `images_all.csv` | Image analysis with alt text and dimensions |
-| `css.csv` | CSS resources |
-| `javascript.csv` | JavaScript resources |
-| `hreflang_all.csv` | Hreflang annotations |
-| `structured_data_all.csv` | Structured data types and validation |
-| `response_codes_all.csv` | HTTP response code analysis |
-| `security_all.csv` | Security headers |
-| `content_all.csv` | Content quality and readability |
-| `links_all.csv` | Link structure and Link Score |
-| `canonicals_all.csv` | Canonical tag analysis |
-| `directives_all.csv` | Crawl directives (robots, canonical) |
-| `h1_all.csv` | H1 tag analysis |
-| `h2_all.csv` | H2 tag analysis |
-| `meta_keywords_all.csv` | Meta keywords |
-| `pagination_all.csv` | Pagination (rel next/prev) |
-| `url_all.csv` | URL structure analysis |
-| `page_titles_duplicate.csv` | Duplicate page titles |
+| `internal_all.csv` | All HTML pages (61 columns) |
+| `url_all.csv` | URL-level data |
+| `response_codes_all.csv` | Status codes & response times |
+| `images_all.csv` | Image occurrences (one row per image per page) |
+| `canonicals_all.csv` | Canonical status analysis |
+| `directives_all.csv` | Meta robots & directives |
+| `h1_all.csv` | H1 heading data |
+| `h2_all.csv` | H2 heading data |
+| `content_all.csv` | Readability & content metrics |
+| `hreflang_all.csv` | Multi-language annotations |
+| `pagination_all.csv` | rel="next"/"prev" data |
+| `structured_data_all.csv` | Schema.org data |
+| `security_all.csv` | HTTPS & security headers |
+| `javascript_all.csv` | JS rendering comparison |
+| `links_all.csv` | Inlink/outlink analysis |
+| `inlinks.csv` | Source→Target link mapping |
+| `redirects.csv` | Redirect chain tracking |
+| `issues.csv` | SEO issues with evidence |
+| `external_all.csv` | External URLs |
+| `page_titles_duplicate.csv` | Duplicate titles |
 | `meta_description_duplicate.csv` | Duplicate meta descriptions |
-| `javascript_all.csv` | JS rendering before/after comparison |
-| `custom_extraction_all.csv` | Custom extraction results |
-| `custom_search_all.csv` | Custom search matches |
-| `issues.csv` | SEO issues with severity |
-| `redirects.csv` | Redirect chains |
-| `inlinks.csv` | Inlink aggregation |
-| `sitemaps_all.csv` | Sitemap URLs |
+| `statistics_summary.csv` | 31 metrics with counting units |
+| `crawl_warnings.csv` | Crawl warnings log |
 
 Also exports:
-- **XLSX** — Multi-sheet Excel workbook (26 sheets) with all the above
-- **JSON** — Full crawl results + summary
+- **statistics_summary.json** — Same metrics as JSON
+- **run_manifest.json** — Crawl configuration & file list
+- **run_summary.json** — Status distribution & top issues
 
 ### Web UI
 - Carbon Design System (IBM) styled dark-theme interface
@@ -189,18 +186,47 @@ asyncio.run(main())
 ## Output Structure
 
 ```
-crawl_output/
-└── example/              # Domain-based folder
-    ├── internal_all.csv
-    ├── external_all.csv
-    ├── content_all.csv
-    ├── links_all.csv
-    ├── security_all.csv
-    ├── javascript_all.csv
-    ├── ... (27 CSV files total)
-    ├── crawl_report.xlsx
-    └── crawl_results.json
+crawl_output/{domain}/
+├── internal_all.csv          # All HTML pages (61 columns)
+├── url_all.csv               # URL-level data
+├── response_codes_all.csv    # Status codes & response times
+├── images_all.csv            # Image occurrences (one row per image per page)
+├── canonicals_all.csv        # Canonical status analysis
+├── directives_all.csv        # Meta robots & directives
+├── h1_all.csv                # H1 heading data
+├── h2_all.csv                # H2 heading data
+├── content_all.csv           # Readability & content metrics
+├── hreflang_all.csv          # Multi-language annotations
+├── pagination_all.csv        # rel="next"/"prev" data
+├── structured_data_all.csv   # Schema.org data
+├── security_all.csv          # HTTPS & security headers
+├── javascript_all.csv        # JS rendering comparison
+├── links_all.csv             # Inlink/outlink analysis
+├── inlinks.csv               # Source→Target link mapping
+├── redirects.csv             # Redirect chain tracking
+├── issues.csv                # SEO issues with evidence
+├── external_all.csv          # External URLs
+├── page_titles_duplicate.csv # Duplicate titles
+├── meta_description_duplicate.csv
+├── statistics_summary.csv    # 31 metrics with counting units
+├── crawl_warnings.csv        # Crawl warnings log
+├── statistics_summary.json   # Same metrics as JSON
+├── run_manifest.json         # Crawl configuration & file list
+└── run_summary.json          # Status distribution & top issues
 ```
+
+## Key Improvements (v2)
+
+- **Screaming Frog-compatible CSV naming** — 26 output files with standard naming conventions
+- **Expanded dataset** — 23 CSV + 3 JSON files with comprehensive SEO metrics
+- **issues.csv with evidence** — SEO issues include evidence column and source_table references for root cause analysis
+- **statistics_summary** — Structured metric records with metric_name, metric_value, counting_unit, and scope for programmatic access
+- **Canonical status classification** — Missing / Self-Referencing / Canonicalised / Canonical to Redirect / Canonical to Non-200
+- **Redirect status classification** — Redirect Chain / Redirect Loop detection
+- **Image occurrence-based counting** — One row per image per page with Missing Alt Attribute vs Missing Alt Text distinction
+- **Title/Meta Description/H1 status** — Classification with cross-page duplicate detection
+- **Near-duplicate detection** — closest_similarity_match and near_duplicate_count population for content deduplication
+- **Programmatic access** — run_manifest.json and run_summary.json for automation and integration
 
 ## Configuration
 
@@ -274,7 +300,8 @@ python-seo-spider/
 │       └── logging_config.py
 ├── crawl_output/              # Generated output (gitignored)
 ├── 산출물_컬럼_명세서.xlsx      # Column specification document
-└── SEO_GEO_분석_가이드.md      # SEO/GEO analysis guide
+├── SEO_GEO_분석_가이드.md      # SEO/GEO analysis guide
+└── SEO_크롤_데이터_분석_방법론.md  # Crawl data analysis methodology
 ```
 
 ## Documentation
@@ -282,6 +309,7 @@ python-seo-spider/
 - **[CLI_OPTIONS.md](CLI_OPTIONS.md)** — Full CLI options reference with examples (English/Korean)
 - **[산출물_컬럼_명세서.xlsx](산출물_컬럼_명세서.xlsx)** — Complete column specification for all 27 CSV files, 26 XLSX sheets, and JSON fields (Korean/English)
 - **[SEO_GEO_분석_가이드.md](SEO_GEO_분석_가이드.md)** — Guide for using crawl data in SEO/GEO proposals with visualization strategies and Python analysis code examples
+- **[SEO_크롤_데이터_분석_방법론.md](SEO_크롤_데이터_분석_방법론.md)** — Comprehensive crawl data analysis methodology: column-level normal/abnormal criteria, Python+Pandas+Seaborn EDA code, Looker Studio and Tableau dashboard guides
 
 ## Requirements
 

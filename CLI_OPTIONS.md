@@ -159,10 +159,13 @@ Output formats / 출력 형식:
 
 | Format | Files Generated | 생성 파일 |
 |--------|----------------|-----------|
-| `csv` | 27 CSV files (Screaming Frog compatible) | 27개 CSV 파일 (Screaming Frog 호환) |
+| `csv` | 23 CSV + 3 JSON files (Screaming Frog compatible) | 23개 CSV + 3개 JSON 파일 (Screaming Frog 호환) |
 | `xlsx` | 1 Excel workbook with 26 sheets | 26개 시트의 Excel 워크북 1개 |
 | `json` | crawl_results.json + crawl_summary.json | crawl_results.json + crawl_summary.json |
 | `all` | All of the above + HTML report | 위 모든 형식 + HTML 리포트 |
+
+**v2 CSV 출력 파일 목록 (26개)**:
+`internal_all.csv`, `url_all.csv`, `response_codes_all.csv`, `images_all.csv`, `canonicals_all.csv`, `directives_all.csv`, `h1_all.csv`, `h2_all.csv`, `content_all.csv`, `hreflang_all.csv`, `pagination_all.csv`, `structured_data_all.csv`, `security_all.csv`, `javascript_all.csv`, `links_all.csv`, `inlinks.csv`, `redirects.csv`, `issues.csv`, `external_all.csv`, `page_titles_duplicate.csv`, `meta_description_duplicate.csv`, `crawl_warnings.csv`, `statistics_summary.csv`, `statistics_summary.json`, `run_manifest.json`, `run_summary.json`
 
 ### Configuration File / 설정 파일
 

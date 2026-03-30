@@ -1,0 +1,40 @@
+{
+  "start_url": "https://www.example.com/",
+  "domain": "example.com",
+  "crawl_start_time": "2026-03-25T14:31:38.961928",
+  "crawl_end_time": "2026-03-25T14:31:38.963048",
+  "total_urls_crawled": 8,
+  "total_internal": 7,
+  "total_external": 1,
+  "output_files": [
+    "canonicals_all.csv",
+    "content_all.csv",
+    "crawl_warnings.csv",
+    "directives_all.csv",
+    "external_all.csv",
+    "h1_all.csv",
+    "h2_all.csv",
+    "hreflang_all.csv",
+    "images_all.csv",
+    "inlinks.csv",
+    "internal_all.csv",
+    "issues.csv",
+    "javascript_all.csv",
+    "links_all.csv",
+    "meta_description_duplicate.csv",
+    "page_titles_duplicate.csv",
+    "pagination_all.csv",
+    "redirects.csv",
+    "response_codes_all.csv",
+    "security_all.csv",
+    "statistics_summary.csv",
+    "statistics_summary.json",
+    "structured_data_all.csv",
+    "url_all.csv"
+  ],
+  "config_summary": {
+    "crawler": "python-seo-spider",
+    "version": "1.0",
+    "export_format": "screaming_frog_compatible"
+  }
+}

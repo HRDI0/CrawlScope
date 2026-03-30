@@ -6,13 +6,14 @@
 
 ## 1. 사이트 건강도 대시보드 (Site Health Overview)
 
-### 사용 파일: `internal_all.csv`, `response_codes_all.csv`, `issues.csv`
+### 사용 파일: `internal_all.csv`, `response_codes_all.csv`, `issues.csv`, `statistics_summary.csv`
 
 **분석 방법:**
 
 - `response_codes_all.csv`에서 Status Code를 그룹화하여 2xx/3xx/4xx/5xx 분포를 계산
-- `issues.csv`에서 Severity(Critical/Warning/Info) 기준으로 집계
+- `issues.csv`에서 Severity(Critical/Warning/Info) 기준으로 집계 — v2에서 `Evidence`, `Source Table`, `Counting Unit` 컬럼 추가
 - `internal_all.csv`에서 Indexability 컬럼으로 색인 가능 vs 불가능 비율 산출
+- `statistics_summary.csv`에서 31개 핵심 지표를 바로 활용 가능 (별도 집계 불필요)
 
 **시각화 권장:**
 
@@ -119,16 +120,16 @@
 
 **분석 방법:**
 
-- `canonicals_all.csv`: Self-referencing canonical 비율, canonical 누락 비율, HTTP vs HTML canonical 불일치
+- `canonicals_all.csv`: v2에서 `Canonical Status` 컬럼으로 5단계 분류 제공 (Missing/Self-Referencing/Canonicalised/Canonical to Redirect/Canonical to Non-200)
 - `directives_all.csv`: noindex 페이지 목록, nofollow 페이지 확인
-- `redirects.csv`: 리다이렉트 체인 길이 분석 (2홉 이상 → 성능 저하), 리다이렉트 유형(301 vs 302) 비율
+- `redirects.csv`: v2에서 `Redirect Status` 컬럼 추가 (""/Redirect Chain/Redirect Loop), 체인 길이 분석
 - `security_all.csv`: HTTPS 채택률, 보안 헤더 적용률 (HSTS, CSP, X-Frame-Options 등)
 
 **시각화 권장:**
 
 | 차트 유형 | 데이터 조합 | 용도 |
 |-----------|------------|------|
-| 스택 막대 | Canonical 상태 (Self/Other/Missing/Mismatch) | 캐노니컬 현황 |
+| 스택 막대 | Canonical Status (Missing/Self-Referencing/Canonicalised/Canonical to Redirect/Canonical to Non-200) | 캐노니컬 현황 (5단계) |
 | 파이 차트 | Redirect Type 분포 (301/302/307) | 리다이렉트 유형 비율 |
 | 히스토그램 | Redirect Chain Length | 리다이렉트 체인 복잡도 |
 | 레이더 차트 | 보안 헤더 적용률 (HSTS, CSP, X-Frame 등) | 보안 현황 한눈에 비교 |
@@ -145,7 +146,8 @@
 
 **분석 방법:**
 
-- Missing Alt Attribute = True인 이미지 비율
+- v2에서 `Missing Alt Attribute`와 `Missing Alt Text`가 분리됨 (속성 누락 vs 빈 텍스트)
+- `Alt Over 100 Characters` 컬럼으로 과도한 alt 텍스트 식별
 - Alt Text 길이 분포 (너무 짧거나/너무 긴 대체 텍스트)
 - 이미지 파일 크기 분포 (큰 이미지 = 성능 저하 원인)
 - 이미지 형식별 분포 (확장자 기준: jpg/png/webp/svg)
@@ -370,4 +372,4 @@ geo_score = pd.DataFrame({
 
 ---
 
-*이 가이드는 Python SEO Spider의 27개 CSV/26개 XLSX 시트 출력을 기반으로 작성되었습니다.*
+*이 가이드는 Python SEO Spider v2의 23개 CSV + 3개 JSON / 26개 XLSX 시트 출력을 기반으로 작성되었습니다.*

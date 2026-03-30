@@ -1,0 +1,9 @@
+﻿Address,Content Type,Status Code,Status,HTTPS,Mixed Content,HSTS,X-Frame-Options,X-Content-Type-Options,Referrer-Policy,Content-Security-Policy,Permissions-Policy,Indexability,Indexability Status
+https://www.example.com/,text/html; charset=utf-8,200,200 OK,True,False,True,,nosniff,strict-origin-when-cross-origin,,,Indexable,Indexable
+https://www.example.com/about,text/html; charset=utf-8,200,200 OK,True,False,True,,,,,,Indexable,Indexable
+https://www.example.com/about-us,text/html; charset=utf-8,200,301 Moved Permanently,True,False,False,,,,,,Non-Indexable,Redirect (301)
+https://www.example.com/old-page,text/html; charset=utf-8,404,404 Not Found,True,False,False,,,,,,Non-Indexable,Non-200 Status Code (404)
+https://www.example.com/services,text/html; charset=utf-8,200,200 OK,True,False,True,,nosniff,,,,Indexable,Indexable
+https://www.example.com/blog,text/html; charset=utf-8,200,200 OK,True,False,False,,,,,,Indexable,Indexable
+https://www.example.com/contact,text/html; charset=utf-8,200,200 OK,True,False,False,,,,,,Non-Indexable,Noindex in Meta Robots; Canonicalised to different URL
+https://www.example.com/old-services,text/html,200,302 Found,True,False,False,,,,,,Non-Indexable,Redirect (302)

@@ -1,0 +1,9 @@
+﻿Address,Word Count,Sentence Count,Average Words Per Sentence,Flesch Reading Ease Score,Readability,Text Ratio,Closest Similarity Match,No. Near Duplicates,Language,Hash,Indexability,Indexability Status
+https://www.example.com/,450,25,18.0,65.2,Fairly Easy,22.5,,0,en,a9c8c5c0840281dd2ef4587b6ed6728d,Indexable,Indexable
+https://www.example.com/about,320,18,17.8,58.0,Standard,18.3,,0,en,3da6cc5e509b96d329b9a61e1716dde4,Indexable,Indexable
+https://www.example.com/about-us,0,0,0.0,0.0,,0.0,,0,,,Non-Indexable,Redirect (301)
+https://www.example.com/old-page,0,0,0.0,0.0,,0.0,,0,,,Non-Indexable,Non-200 Status Code (404)
+https://www.example.com/services,280,15,18.7,52.0,Standard,16.0,,0,en,c649cd81bd8305bca92722b20f48cc1b,Indexable,Indexable
+https://www.example.com/blog,85,5,0.0,0.0,,8.0,,0,en,3c1166dd58fdbe7402c10f9e8bd0ddc3,Indexable,Indexable
+https://www.example.com/contact,150,8,0.0,0.0,,14.0,,0,en,266d27871982cfd84273a5865a9554b4,Non-Indexable,Noindex in Meta Robots; Canonicalised to different URL
+https://www.example.com/old-services,0,0,0.0,0.0,,0.0,,0,,,Non-Indexable,Redirect (302)

@@ -1,0 +1,220 @@
+[
+  {
+    "metric_name": "Total URLs Crawled",
+    "metric_value": 8,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "internal_all.csv"
+  },
+  {
+    "metric_name": "Total Internal URLs",
+    "metric_value": 7,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "internal_all.csv"
+  },
+  {
+    "metric_name": "Total External URLs",
+    "metric_value": 1,
+    "counting_unit": "url",
+    "scope": "crawl",
+    "source_tables": "external_all.csv"
+  },
+  {
+    "metric_name": "Total Redirects",
+    "metric_value": 2,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "redirects.csv"
+  },
+  {
+    "metric_name": "Total Client Errors",
+    "metric_value": 1,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "response_codes_all.csv"
+  },
+  {
+    "metric_name": "Total Server Errors",
+    "metric_value": 0,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "response_codes_all.csv"
+  },
+  {
+    "metric_name": "Total Images",
+    "metric_value": 7,
+    "counting_unit": "occurrence",
+    "scope": "crawl",
+    "source_tables": "images_all.csv"
+  },
+  {
+    "metric_name": "Unique Image Assets",
+    "metric_value": 7,
+    "counting_unit": "asset",
+    "scope": "crawl",
+    "source_tables": "images_all.csv"
+  },
+  {
+    "metric_name": "Images Missing Alt Attribute",
+    "metric_value": 1,
+    "counting_unit": "occurrence",
+    "scope": "crawl",
+    "source_tables": "images_all.csv"
+  },
+  {
+    "metric_name": "Images Missing Alt Text",
+    "metric_value": 2,
+    "counting_unit": "occurrence",
+    "scope": "crawl",
+    "source_tables": "images_all.csv"
+  },
+  {
+    "metric_name": "Images Alt Over 100 Characters",
+    "metric_value": 1,
+    "counting_unit": "occurrence",
+    "scope": "crawl",
+    "source_tables": "images_all.csv"
+  },
+  {
+    "metric_name": "Pages with Missing Title",
+    "metric_value": 3,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "internal_all.csv"
+  },
+  {
+    "metric_name": "Pages with Duplicate Title",
+    "metric_value": 2,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "page_titles_duplicate.csv"
+  },
+  {
+    "metric_name": "Pages with Title Over 60 Characters",
+    "metric_value": 0,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "internal_all.csv"
+  },
+  {
+    "metric_name": "Pages with Title Below 30 Characters",
+    "metric_value": 5,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "internal_all.csv"
+  },
+  {
+    "metric_name": "Pages with Missing Meta Description",
+    "metric_value": 4,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "internal_all.csv"
+  },
+  {
+    "metric_name": "Pages with Duplicate Meta Description",
+    "metric_value": 0,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "meta_description_duplicate.csv"
+  },
+  {
+    "metric_name": "Pages with Meta Description Over 160 Characters",
+    "metric_value": 0,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "internal_all.csv"
+  },
+  {
+    "metric_name": "Pages with Missing H1",
+    "metric_value": 4,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "h1_all.csv"
+  },
+  {
+    "metric_name": "Pages with Multiple H1",
+    "metric_value": 1,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "h1_all.csv"
+  },
+  {
+    "metric_name": "Pages with Missing Canonical",
+    "metric_value": 4,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "canonicals_all.csv"
+  },
+  {
+    "metric_name": "Pages with Self-Referencing Canonical",
+    "metric_value": 3,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "canonicals_all.csv"
+  },
+  {
+    "metric_name": "Pages with Non-Self Canonical",
+    "metric_value": 1,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "canonicals_all.csv"
+  },
+  {
+    "metric_name": "Pages with Structured Data",
+    "metric_value": 2,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "structured_data_all.csv"
+  },
+  {
+    "metric_name": "Pages without Structured Data",
+    "metric_value": 6,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "structured_data_all.csv"
+  },
+  {
+    "metric_name": "Pages with Hreflang",
+    "metric_value": 1,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "hreflang_all.csv"
+  },
+  {
+    "metric_name": "Average Word Count",
+    "metric_value": 160.62,
+    "counting_unit": "words",
+    "scope": "crawl",
+    "source_tables": "content_all.csv"
+  },
+  {
+    "metric_name": "Average Response Time",
+    "metric_value": 0.659,
+    "counting_unit": "seconds",
+    "scope": "crawl",
+    "source_tables": "response_codes_all.csv"
+  },
+  {
+    "metric_name": "Average Crawl Depth",
+    "metric_value": 1.12,
+    "counting_unit": "levels",
+    "scope": "crawl",
+    "source_tables": "links_all.csv"
+  },
+  {
+    "metric_name": "HTTPS Pages",
+    "metric_value": 100.0,
+    "counting_unit": "%",
+    "denominator_if_any": "8",
+    "scope": "crawl",
+    "source_tables": "security_all.csv"
+  },
+  {
+    "metric_name": "Non-Indexable Pages",
+    "metric_value": 4,
+    "counting_unit": "page",
+    "scope": "crawl",
+    "source_tables": "internal_all.csv"
+  }
+]

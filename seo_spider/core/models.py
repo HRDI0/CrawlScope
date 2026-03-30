@@ -34,6 +34,7 @@ class ImageData:
     is_missing_alt: bool = False
     is_missing_alt_attribute: bool = False
     alt_over_100: bool = False
+    source_page: str = ""  # Track which page the image appeared on
 
 
 @dataclass
@@ -145,21 +146,27 @@ class PageData:
     response_time: float = 0.0
     crawl_depth: int = 0
     crawl_timestamp: str = ""
+    original_status_code: int = 0  # First response's status code before redirect resolution
+    page_type: str = ""  # "HTML", "Image", "CSS", "JavaScript", "PDF", "Other", "Redirect"
 
     # === Redirects ===
     is_redirect: bool = False
     redirect_chain: list[str] = field(default_factory=list)
     redirect_type: str = ""     # 301, 302, 303, 307, 308, meta-refresh, js
+    redirect_status: str = ""  # "", "Redirect Chain", "Redirect Loop"
+    redirect_chain_length: int = 0
 
     # === Title ===
     title: str = ""
     title_length: int = 0
     title_pixel_width: int = 0  # Estimated pixel width
+    title_status: str = ""  # "Missing", "Duplicate", "Over 60 Characters", "Below 30 Characters", "OK"
 
     # === Meta Description ===
     meta_description: str = ""
     meta_description_length: int = 0
     meta_description_pixel_width: int = 0
+    meta_desc_status: str = ""  # "Missing", "Duplicate", "Over 160 Characters", "Below 70 Characters", "OK"
 
     # === Meta Keywords ===
     meta_keywords: str = ""
@@ -177,9 +184,11 @@ class PageData:
     http_canonical: str = ""
     canonical_is_self: bool = False
     canonical_mismatch: bool = False
+    canonical_status: str = ""  # "Missing", "Self-Referencing", "Canonicalised", "Canonical to Redirect", "Canonical to Non-200"
 
     # === Headings ===
     headings: HeadingData = field(default_factory=HeadingData)
+    h1_status: str = ""  # "Missing", "Multiple", "Duplicate", "OK"
 
     # === Content ===
     word_count: int = 0
@@ -212,6 +221,8 @@ class PageData:
     images: list[ImageData] = field(default_factory=list)
     images_count: int = 0
     images_missing_alt: int = 0
+    images_missing_alt_attribute: int = 0  # Separate count for missing alt attribute
+    images_with_alt_over_100: int = 0
 
     # === Resources ===
     css_resources: list[ResourceData] = field(default_factory=list)
@@ -317,6 +328,10 @@ class CrawlResult:
 
     # Inlink map: target_url -> [source_urls]
     inlink_map: dict[str, list[str]] = field(default_factory=dict)
+
+    # Crawl warnings and sitemaps
+    crawl_warnings: list[str] = field(default_factory=list)  # Warnings collected during crawl
+    sitemap_urls: list[str] = field(default_factory=list)  # URLs found in sitemaps
 
     def get_pages_by_status(self, status: int) -> list[PageData]:
         return [p for p in self.pages if p.status_code == status]

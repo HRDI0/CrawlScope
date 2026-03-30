@@ -1,0 +1,9 @@
+﻿Address,Indexability,Indexability Status,"rel=""next"" 1","rel=""prev"" 1","HTTP rel=""next"" 1","HTTP rel=""prev"" 1",Canonical Link Element 1
+https://www.example.com/,Indexable,Indexable,,,,,https://www.example.com/
+https://www.example.com/about,Indexable,Indexable,,,,,https://www.example.com/about
+https://www.example.com/about-us,Non-Indexable,Redirect (301),,,,,
+https://www.example.com/old-page,Non-Indexable,Non-200 Status Code (404),,,,,
+https://www.example.com/services,Indexable,Indexable,,,,,https://www.example.com/services
+https://www.example.com/blog,Indexable,Indexable,,,,,
+https://www.example.com/contact,Non-Indexable,Noindex in Meta Robots; Canonicalised to different URL,,,,,https://www.example.com/about
+https://www.example.com/old-services,Non-Indexable,Redirect (302),,,,,

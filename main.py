@@ -325,12 +325,108 @@ async def run_crawl(config: CrawlConfig, args) -> CrawlResult:
     return result
 
 
+def _populate_status_fields(result: CrawlResult):
+    """Populate title_status, meta_desc_status, h1_status, and canonical cross-checks."""
+    from collections import defaultdict
+
+    pages_by_url = {p.url: p for p in result.pages}
+    html_pages = [p for p in result.pages if p.status_code == 200 and 'text/html' in p.content_type]
+
+    # --- Title status & duplicates ---
+    title_map = defaultdict(list)
+    for p in html_pages:
+        if p.title:
+            title_map[p.title.strip().lower()].append(p)
+
+    for p in html_pages:
+        if not p.title:
+            p.title_status = "Missing"
+        elif len(title_map.get(p.title.strip().lower(), [])) > 1:
+            p.title_status = "Duplicate"
+        elif p.title_length > 60:
+            p.title_status = "Over 60 Characters"
+        elif p.title_length < 30:
+            p.title_status = "Below 30 Characters"
+        else:
+            p.title_status = "OK"
+
+    # --- Meta description status & duplicates ---
+    desc_map = defaultdict(list)
+    for p in html_pages:
+        if p.meta_description:
+            desc_map[p.meta_description.strip().lower()].append(p)
+
+    for p in html_pages:
+        if not p.meta_description:
+            p.meta_desc_status = "Missing"
+        elif len(desc_map.get(p.meta_description.strip().lower(), [])) > 1:
+            p.meta_desc_status = "Duplicate"
+        elif p.meta_description_length > 160:
+            p.meta_desc_status = "Over 160 Characters"
+        elif p.meta_description_length < 70:
+            p.meta_desc_status = "Below 70 Characters"
+        else:
+            p.meta_desc_status = "OK"
+
+    # --- H1 status & duplicates ---
+    h1_map = defaultdict(list)
+    for p in html_pages:
+        if p.headings.h1:
+            for h1 in p.headings.h1:
+                h1_map[h1.strip().lower()].append(p)
+
+    for p in html_pages:
+        if p.headings.missing_h1:
+            p.h1_status = "Missing"
+        elif p.headings.multiple_h1:
+            p.h1_status = "Multiple"
+        elif p.headings.h1 and len(h1_map.get(p.headings.h1[0].strip().lower(), [])) > 1:
+            p.h1_status = "Duplicate"
+        else:
+            p.h1_status = "OK"
+
+    # --- Canonical cross-check (to redirect / to non-200) ---
+    for p in html_pages:
+        if p.canonical_url and p.canonical_status == "Canonicalised":
+            target = pages_by_url.get(p.canonical_url)
+            if target:
+                if target.is_redirect or (300 <= target.status_code < 400):
+                    p.canonical_status = "Canonical to Redirect"
+                elif target.status_code != 200:
+                    p.canonical_status = "Canonical to Non-200"
+
+    # --- Near-duplicate population ---
+    for p in result.pages:
+        if p.simhash and p.status_code == 200:
+            best_match = ""
+            best_dist = 999
+            count = 0
+            for q in result.pages:
+                if q.url == p.url or not q.simhash or q.status_code != 200:
+                    continue
+                if p.content_hash and p.content_hash == q.content_hash:
+                    continue
+                from seo_spider.utils.hash_utils import hamming_distance
+                dist = hamming_distance(p.simhash, q.simhash)
+                if dist <= 5:
+                    count += 1
+                    if dist < best_dist:
+                        best_dist = dist
+                        best_match = q.url
+            p.near_duplicate_count = count
+            p.closest_similarity_match = best_match
+
+
 def post_process(result: CrawlResult, config: CrawlConfig, args):
     """Run post-crawl analysis and export."""
     output_dir = config.output_dir
     os.makedirs(output_dir, exist_ok=True)
 
     print(f"\n  Post-processing...")
+
+    # Populate status fields (title, meta desc, h1, canonical cross-check)
+    print("  - Populating status fields...")
+    _populate_status_fields(result)
 
     # Duplicate detection
     print("  - Detecting duplicates...")
@@ -340,7 +436,8 @@ def post_process(result: CrawlResult, config: CrawlConfig, args):
     # Issue detection
     print("  - Detecting SEO issues...")
     issue_detector = IssueDetector()
-    issue_detector.detect_crawl_issues(result)
+    pages_by_url = {p.url: p for p in result.pages}
+    issue_detector.detect_crawl_issues(result, pages_by_url=pages_by_url)
 
     # Structured data validation
     print("  - Validating structured data...")
@@ -353,9 +450,10 @@ def post_process(result: CrawlResult, config: CrawlConfig, args):
     fmt = config.export_format
     print(f"  - Exporting ({fmt})...")
 
+    generated_files = []
     if fmt in ("csv", "all"):
         exporter = CSVExporter(output_dir)
-        exporter.export_all(result)
+        generated_files = exporter.export_all(result)
 
     if fmt in ("xlsx", "all"):
         exporter = XLSXExporter(output_dir)
@@ -396,6 +494,8 @@ def post_process(result: CrawlResult, config: CrawlConfig, args):
                 f.write(xml)
 
     print(f"\n  All outputs saved to: {output_dir}")
+    total_files = len(generated_files) if generated_files else 0
+    print(f"  Generated {total_files} output files")
     print(f"\n{'='*60}")
     print(f"  Summary")
     print(f"{'='*60}")

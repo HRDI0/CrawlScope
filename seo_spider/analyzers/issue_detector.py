@@ -21,6 +21,9 @@ class SEOIssue:
     url: str = ""
     current_value: str = ""
     recommendation: str = ""
+    evidence: str = ""        # concrete proof of the issue (e.g., actual URL, actual value)
+    source_table: str = ""    # which CSV this issue relates to (e.g., "internal_all.csv")
+    counting_unit: str = ""   # what's being counted: "page", "image", "link", etc.
 
 
 class IssueDetector:
@@ -29,8 +32,13 @@ class IssueDetector:
     Mirrors Screaming Frog's Overview tab issue detection.
     """
 
-    def detect_page_issues(self, page: PageData) -> list[SEOIssue]:
-        """Detect all issues for a single page."""
+    def detect_page_issues(self, page: PageData, pages_by_url: dict = None) -> list[SEOIssue]:
+        """Detect all issues for a single page.
+
+        Args:
+            page: PageData object to check
+            pages_by_url: Optional dict mapping URLs to PageData for cross-checks
+        """
         issues = []
 
         if page.status_code != 200:
@@ -44,7 +52,7 @@ class IssueDetector:
         issues.extend(self._check_content_issues(page))
         issues.extend(self._check_image_issues(page))
         issues.extend(self._check_link_issues(page))
-        issues.extend(self._check_canonical_issues(page))
+        issues.extend(self._check_canonical_issues(page, pages_by_url))
         issues.extend(self._check_hreflang_issues(page))
         issues.extend(self._check_indexability_issues(page))
         issues.extend(self._check_security_issues(page))
@@ -55,14 +63,32 @@ class IssueDetector:
 
         return issues
 
-    def detect_crawl_issues(self, result: CrawlResult) -> dict[str, list[SEOIssue]]:
-        """Detect all issues across the entire crawl."""
+    def detect_crawl_issues(self, result: CrawlResult, pages_by_url: dict = None) -> dict[str, list[SEOIssue]]:
+        """Detect all issues across the entire crawl.
+
+        Args:
+            result: CrawlResult object containing all pages
+            pages_by_url: Optional dict mapping URLs to PageData for cross-checking canonicals
+        """
         all_issues: dict[str, list[SEOIssue]] = {}
 
+        # Build pages_by_url if not provided
+        if pages_by_url is None:
+            pages_by_url = {page.url: page for page in result.pages}
+
+        # Per-page checks
         for page in result.pages:
-            page_issues = self.detect_page_issues(page)
+            page_issues = self.detect_page_issues(page, pages_by_url)
             if page_issues:
                 all_issues[page.url] = page_issues
+
+        # Cross-page duplicate checks for titles, meta descriptions, and h1s
+        cross_page_issues = self._check_cross_page_duplicates(result.pages)
+        for url, issues in cross_page_issues.items():
+            if url in all_issues:
+                all_issues[url].extend(issues)
+            else:
+                all_issues[url] = issues
 
         # Aggregate issue counts
         issue_counts = {}
@@ -84,6 +110,9 @@ class IssueDetector:
                 category="Response Codes", severity="error",
                 issue_type="Connection Error", url=page.url,
                 description=page.crawl_error or "Failed to connect",
+                evidence=page.url,
+                source_table="response_codes_all.csv",
+                counting_unit="page",
             ))
         elif 300 <= sc < 400:
             issues.append(SEOIssue(
@@ -91,26 +120,41 @@ class IssueDetector:
                 issue_type=f"Redirect ({sc})", url=page.url,
                 description=f"Page redirects with status {sc}",
                 current_value=f"Redirects to: {page.final_url}",
+                evidence=page.final_url or page.url,
+                source_table="redirects.csv",
+                counting_unit="page",
             ))
         elif sc == 404:
             issues.append(SEOIssue(
                 category="Response Codes", severity="error",
                 issue_type="Not Found (404)", url=page.url,
+                evidence=page.url,
+                source_table="response_codes_all.csv",
+                counting_unit="page",
             ))
         elif sc == 410:
             issues.append(SEOIssue(
                 category="Response Codes", severity="warning",
                 issue_type="Gone (410)", url=page.url,
+                evidence=page.url,
+                source_table="response_codes_all.csv",
+                counting_unit="page",
             ))
         elif 400 <= sc < 500:
             issues.append(SEOIssue(
                 category="Response Codes", severity="error",
                 issue_type=f"Client Error ({sc})", url=page.url,
+                evidence=page.url,
+                source_table="response_codes_all.csv",
+                counting_unit="page",
             ))
         elif 500 <= sc < 600:
             issues.append(SEOIssue(
                 category="Response Codes", severity="error",
                 issue_type=f"Server Error ({sc})", url=page.url,
+                evidence=page.url,
+                source_table="response_codes_all.csv",
+                counting_unit="page",
             ))
 
         # Redirect chain
@@ -121,6 +165,21 @@ class IssueDetector:
                 url=page.url,
                 description=f"Redirect chain with {len(page.redirect_chain)} hops",
                 current_value=" -> ".join(page.redirect_chain[:5]),
+                evidence=" -> ".join(page.redirect_chain),
+                source_table="redirects.csv",
+                counting_unit="page",
+            ))
+
+        # Redirect loop
+        if page.crawl_error and "loop" in page.crawl_error.lower():
+            issues.append(SEOIssue(
+                category="Response Codes", severity="error",
+                issue_type="Redirect Loop",
+                url=page.url,
+                description=page.crawl_error,
+                evidence=page.url,
+                source_table="redirects.csv",
+                counting_unit="page",
             ))
 
         return issues
@@ -134,6 +193,9 @@ class IssueDetector:
                 category="Page Titles", severity="error",
                 issue_type="Missing", url=page.url,
                 recommendation="Add a unique, descriptive title tag",
+                evidence=page.url,
+                source_table="internal_all.csv",
+                counting_unit="page",
             ))
         else:
             if page.title_length < 30:
@@ -142,6 +204,9 @@ class IssueDetector:
                     issue_type="Below 30 Characters", url=page.url,
                     current_value=f"{page.title_length} chars: {page.title[:50]}",
                     recommendation="Title should be 30-60 characters",
+                    evidence=page.title,
+                    source_table="internal_all.csv",
+                    counting_unit="page",
                 ))
             elif page.title_length > 60:
                 issues.append(SEOIssue(
@@ -149,12 +214,18 @@ class IssueDetector:
                     issue_type="Over 60 Characters", url=page.url,
                     current_value=f"{page.title_length} chars",
                     recommendation="Title may be truncated in SERPs",
+                    evidence=page.title,
+                    source_table="internal_all.csv",
+                    counting_unit="page",
                 ))
             if page.title_pixel_width > 580:
                 issues.append(SEOIssue(
                     category="Page Titles", severity="warning",
                     issue_type="Over 580 Pixels", url=page.url,
                     current_value=f"{page.title_pixel_width}px estimated",
+                    evidence=page.title,
+                    source_table="internal_all.csv",
+                    counting_unit="page",
                 ))
 
         return issues
@@ -168,6 +239,9 @@ class IssueDetector:
                 category="Meta Description", severity="warning",
                 issue_type="Missing", url=page.url,
                 recommendation="Add a unique meta description (120-160 chars)",
+                evidence=page.url,
+                source_table="internal_all.csv",
+                counting_unit="page",
             ))
         else:
             if page.meta_description_length < 70:
@@ -175,6 +249,9 @@ class IssueDetector:
                     category="Meta Description", severity="info",
                     issue_type="Below 70 Characters", url=page.url,
                     current_value=f"{page.meta_description_length} chars",
+                    evidence=page.meta_description,
+                    source_table="internal_all.csv",
+                    counting_unit="page",
                 ))
             elif page.meta_description_length > 160:
                 issues.append(SEOIssue(
@@ -182,6 +259,9 @@ class IssueDetector:
                     issue_type="Over 160 Characters", url=page.url,
                     current_value=f"{page.meta_description_length} chars",
                     recommendation="Description may be truncated in SERPs",
+                    evidence=page.meta_description,
+                    source_table="internal_all.csv",
+                    counting_unit="page",
                 ))
 
         return issues
@@ -195,13 +275,32 @@ class IssueDetector:
                 category="H1", severity="warning",
                 issue_type="Missing", url=page.url,
                 recommendation="Add a single H1 heading to the page",
+                evidence=page.url,
+                source_table="h1_all.csv",
+                counting_unit="page",
             ))
         elif page.headings.multiple_h1:
+            h1_texts = " | ".join(page.headings.h1)
             issues.append(SEOIssue(
                 category="H1", severity="warning",
                 issue_type="Multiple", url=page.url,
                 current_value=f"{page.headings.h1_count} H1 tags found",
                 recommendation="Use only one H1 per page",
+                evidence=h1_texts,
+                source_table="h1_all.csv",
+                counting_unit="page",
+            ))
+
+        # Check for duplicate h1s
+        if len(page.headings.h1) != len(set(page.headings.h1)):
+            duplicate_h1 = [h for h in page.headings.h1 if page.headings.h1.count(h) > 1][0]
+            issues.append(SEOIssue(
+                category="H1", severity="warning",
+                issue_type="Duplicate", url=page.url,
+                current_value=f"Duplicate H1 found",
+                evidence=duplicate_h1,
+                source_table="h1_all.csv",
+                counting_unit="page",
             ))
 
         for h1 in page.headings.h1:
@@ -210,6 +309,9 @@ class IssueDetector:
                     category="H1", severity="info",
                     issue_type="Over 70 Characters", url=page.url,
                     current_value=f"{len(h1)} chars",
+                    evidence=h1,
+                    source_table="h1_all.csv",
+                    counting_unit="page",
                 ))
 
         return issues
@@ -278,18 +380,27 @@ class IssueDetector:
                     category="Images", severity="warning",
                     issue_type="Missing Alt Attribute", url=page.url,
                     current_value=img.src[:100],
+                    evidence=img.src,
+                    source_table="images_all.csv",
+                    counting_unit="image",
                 ))
             elif img.is_missing_alt:
                 issues.append(SEOIssue(
                     category="Images", severity="info",
-                    issue_type="Empty Alt Text", url=page.url,
+                    issue_type="Missing Alt Text", url=page.url,
                     current_value=img.src[:100],
+                    evidence=img.src,
+                    source_table="images_all.csv",
+                    counting_unit="image",
                 ))
             if img.alt_over_100:
                 issues.append(SEOIssue(
                     category="Images", severity="info",
                     issue_type="Alt Text Over 100 Characters", url=page.url,
                     current_value=f"{len(img.alt_text)} chars",
+                    evidence=img.alt_text,
+                    source_table="images_all.csv",
+                    counting_unit="image",
                 ))
 
         return issues
@@ -332,21 +443,79 @@ class IssueDetector:
 
         return issues
 
-    def _check_canonical_issues(self, page: PageData) -> list[SEOIssue]:
-        """Check canonical-related issues."""
+    def _check_canonical_issues(self, page: PageData, pages_by_url: dict = None) -> list[SEOIssue]:
+        """Check canonical-related issues.
+
+        Distinguishes:
+        - Canonical Missing (no canonical tag)
+        - Self-Referencing Canonical (canonical points to itself)
+        - Non-Self Canonical (canonical points elsewhere)
+        - Canonical to Redirect (canonical points to a URL in redirect list)
+        - Canonical to Non-200 (canonical target has non-200 status)
+        """
         issues = []
 
         if not page.canonical_url:
             issues.append(SEOIssue(
                 category="Canonicals", severity="info",
-                issue_type="Missing Canonical", url=page.url,
+                issue_type="Canonical Missing", url=page.url,
+                evidence=page.url,
+                source_table="canonicals_all.csv",
+                counting_unit="page",
             ))
-        elif page.canonical_mismatch:
-            issues.append(SEOIssue(
-                category="Canonicals", severity="warning",
-                issue_type="Non-Self Canonical", url=page.url,
-                current_value=page.canonical_url[:100],
-            ))
+        else:
+            # Check if self-referencing
+            if page.canonical_url == page.url:
+                issues.append(SEOIssue(
+                    category="Canonicals", severity="info",
+                    issue_type="Self-Referencing Canonical", url=page.url,
+                    current_value=page.canonical_url[:100],
+                    evidence=page.canonical_url,
+                    source_table="canonicals_all.csv",
+                    counting_unit="page",
+                ))
+            else:
+                # Check if canonical points to a redirect
+                if pages_by_url and page.canonical_url in pages_by_url:
+                    canonical_page = pages_by_url[page.canonical_url]
+                    if 300 <= canonical_page.status_code < 400:
+                        issues.append(SEOIssue(
+                            category="Canonicals", severity="warning",
+                            issue_type="Canonical to Redirect", url=page.url,
+                            current_value=page.canonical_url[:100],
+                            evidence=page.canonical_url,
+                            source_table="canonicals_all.csv",
+                            counting_unit="page",
+                        ))
+                    elif canonical_page.status_code != 200:
+                        issues.append(SEOIssue(
+                            category="Canonicals", severity="warning",
+                            issue_type="Canonical to Non-200", url=page.url,
+                            current_value=f"{page.canonical_url[:100]} (status: {canonical_page.status_code})",
+                            evidence=page.canonical_url,
+                            source_table="canonicals_all.csv",
+                            counting_unit="page",
+                        ))
+                    else:
+                        # Non-self canonical to a valid page
+                        issues.append(SEOIssue(
+                            category="Canonicals", severity="warning",
+                            issue_type="Non-Self Canonical", url=page.url,
+                            current_value=page.canonical_url[:100],
+                            evidence=page.canonical_url,
+                            source_table="canonicals_all.csv",
+                            counting_unit="page",
+                        ))
+                else:
+                    # Non-self canonical, target not in crawl
+                    issues.append(SEOIssue(
+                        category="Canonicals", severity="warning",
+                        issue_type="Non-Self Canonical", url=page.url,
+                        current_value=page.canonical_url[:100],
+                        evidence=page.canonical_url,
+                        source_table="canonicals_all.csv",
+                        counting_unit="page",
+                    ))
 
         return issues
 
@@ -430,19 +599,29 @@ class IssueDetector:
                 category="Structured Data", severity="info",
                 issue_type="No Structured Data", url=page.url,
                 recommendation="Consider adding JSON-LD structured data",
+                evidence=page.url,
+                source_table="structured_data_all.csv",
+                counting_unit="page",
             ))
         else:
             for sd in page.structured_data:
+                sd_type = getattr(sd, 'schema_type', 'Unknown')
                 if not sd.is_valid:
                     for err in sd.validation_errors:
                         issues.append(SEOIssue(
                             category="Structured Data", severity="error",
                             issue_type=f"Validation Error: {err}", url=page.url,
+                            evidence=sd_type,
+                            source_table="structured_data_all.csv",
+                            counting_unit="page",
                         ))
                 for warn in sd.validation_warnings:
                     issues.append(SEOIssue(
                         category="Structured Data", severity="warning",
                         issue_type=f"Validation Warning: {warn}", url=page.url,
+                        evidence=sd_type,
+                        source_table="structured_data_all.csv",
+                        counting_unit="page",
                     ))
 
         return issues
@@ -500,6 +679,93 @@ class IssueDetector:
             ))
 
         return issues
+
+    def _check_cross_page_duplicates(self, pages: list[PageData]) -> dict[str, list[SEOIssue]]:
+        """Check for duplicate titles, meta descriptions, and h1s across pages.
+
+        For each duplicate group, creates issues for every page in the group.
+
+        Args:
+            pages: List of PageData objects to check for duplicates
+
+        Returns:
+            Dictionary mapping URLs to lists of duplicate issues
+        """
+        all_issues: dict[str, list[SEOIssue]] = {}
+
+        # Filter pages with status 200 only
+        valid_pages = [p for p in pages if p.status_code == 200]
+
+        # Check for duplicate titles
+        title_groups: dict[str, list[str]] = {}
+        for page in valid_pages:
+            if page.title:
+                if page.title not in title_groups:
+                    title_groups[page.title] = []
+                title_groups[page.title].append(page.url)
+
+        for title, urls in title_groups.items():
+            if len(urls) > 1:
+                for url in urls:
+                    if url not in all_issues:
+                        all_issues[url] = []
+                    all_issues[url].append(SEOIssue(
+                        category="Page Titles", severity="warning",
+                        issue_type="Duplicate", url=url,
+                        current_value=f"Duplicate title across {len(urls)} pages",
+                        recommendation="Each page should have a unique title",
+                        evidence=title,
+                        source_table="internal_all.csv",
+                        counting_unit="page",
+                    ))
+
+        # Check for duplicate meta descriptions
+        desc_groups: dict[str, list[str]] = {}
+        for page in valid_pages:
+            if page.meta_description:
+                if page.meta_description not in desc_groups:
+                    desc_groups[page.meta_description] = []
+                desc_groups[page.meta_description].append(page.url)
+
+        for desc, urls in desc_groups.items():
+            if len(urls) > 1:
+                for url in urls:
+                    if url not in all_issues:
+                        all_issues[url] = []
+                    all_issues[url].append(SEOIssue(
+                        category="Meta Description", severity="warning",
+                        issue_type="Duplicate", url=url,
+                        current_value=f"Duplicate description across {len(urls)} pages",
+                        recommendation="Each page should have a unique description",
+                        evidence=desc,
+                        source_table="internal_all.csv",
+                        counting_unit="page",
+                    ))
+
+        # Check for duplicate h1s
+        h1_groups: dict[str, list[str]] = {}
+        for page in valid_pages:
+            for h1 in page.headings.h1:
+                if h1 not in h1_groups:
+                    h1_groups[h1] = []
+                h1_groups[h1].append(page.url)
+
+        for h1, urls in h1_groups.items():
+            if len(urls) > 1:
+                for url in urls:
+                    if url not in all_issues:
+                        all_issues[url] = []
+                    all_issues[url].append(SEOIssue(
+                        category="H1", severity="warning",
+                        issue_type="Duplicate", url=url,
+                        current_value=f"Duplicate H1 across {len(urls)} pages",
+                        recommendation="Each page should have a unique H1",
+                        evidence=h1,
+                        source_table="h1_all.csv",
+                        counting_unit="page",
+                    ))
+
+        return all_issues
 
     def _check_pagination_issues(self, page: PageData) -> list[SEOIssue]:
         """Check pagination issues."""

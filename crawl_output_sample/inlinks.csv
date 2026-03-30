@@ -1,0 +1,9 @@
+﻿Source URL,Target URL,Anchor Text,Link Type,Link Position,Is Follow,Status Code
+https://www.example.com/,https://www.example.com/about,About Us,hyperlink,navigation,Yes,0
+https://www.example.com/,https://www.example.com/services,Services,hyperlink,navigation,Yes,0
+https://www.example.com/,https://www.example.com/blog,Blog,hyperlink,content,Yes,0
+https://www.example.com/,https://www.example.com/contact,Contact,hyperlink,footer,Yes,0
+https://www.example.com/,https://twitter.com/example,Twitter,hyperlink,footer,No,0
+https://www.example.com/about,https://www.example.com/,Home,hyperlink,,Yes,0
+https://www.example.com/services,https://www.example.com/,Home,hyperlink,,Yes,0
+https://www.example.com/services,https://www.example.com/contact,Contact,hyperlink,,Yes,0
